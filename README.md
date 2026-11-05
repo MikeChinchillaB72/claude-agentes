@@ -19,19 +19,27 @@ Requisitos: Python 3.10 o superior y una clave de API de https://console.anthrop
 
 | Ruta | Qué es |
 |---|---|
-| `agentes/comun.py` | Modelo por defecto y `ejecutar_agente()`, que muestra el progreso, el coste y el resultado |
+| `agentes/comun.py` | Modelo por defecto, `ejecutar_agente()` (registro JSON de costo, turnos y rechazos), `politica_de_herramientas()` (aprobación) y `SANDBOX_ESTRICTO` |
 | `agentes/plantilla_agente.py` | Plantilla para copiar al crear un agente nuevo |
 | `ejemplos/01_basico.py` | Agente que lee una carpeta con herramientas integradas |
 | `ejemplos/02_herramienta_propia.py` | Agente con una herramienta escrita en Python |
 | `ejemplos/03_subagentes.py` | Agente coordinador que delega en subagentes |
-| `tests/` | Pruebas de las herramientas sin llamar a la API |
+| `tests/` | Pruebas de herramientas y políticas sin llamar a la API |
+| `docs/` | Estándares y lista de revisión por agente |
+
+## Estándares
+
+Todo agente cumple [docs/ESTANDARES.md](docs/ESTANDARES.md) (arquitectura, seguridad e ingeniería)
+y pasa la [lista de revisión](docs/lista-revision-agente.md) antes de producción.
 
 ## Crear un agente nuevo
 
 1. Copia `agentes/plantilla_agente.py` a `agentes/mi_agente.py`.
 2. Cambia `INSTRUCCIONES` (quién es y cómo responde) y `HERRAMIENTAS` (qué puede hacer).
 3. Si necesita acceder a tus sistemas, crea herramientas con `@tool` como en el ejemplo 2.
+   Las que escriben o tienen efectos van en `HERRAMIENTAS_SENSIBLES`, nunca en `allowed_tools`.
 4. Ejecuta `python -m agentes.mi_agente "tu petición"`.
+5. Añade sus evaluaciones en `evals/mi_agente/` y recorre la lista de revisión.
 
 ## Buenas prácticas
 
