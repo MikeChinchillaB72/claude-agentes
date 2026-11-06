@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+agentes/__init__.py
+agentes/comun.py
+agentes/plantilla_agente.py
+agentes_base.egg-info/PKG-INFO
+agentes_base.egg-info/SOURCES.txt
+agentes_base.egg-info/dependency_links.txt
+agentes_base.egg-info/requires.txt
+agentes_base.egg-info/top_level.txt
+tests/test_herramientas.py
+tests/test_politica.py

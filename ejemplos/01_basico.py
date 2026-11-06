@@ -1,17 +1,17 @@
-"""Ejemplo 1: agente que lee y explica los archivos de una carpeta."""
+"""Ejemplo 1: agente que lee y explica los archivos de una carpeta.
+
+Su configuración está en config/agentes/ejemplo_basico.toml.
+"""
 
 import asyncio
 
-from claude_agent_sdk import ClaudeAgentOptions
+from agentes import cargar, ejecutar_agente, opciones_de_agente
 
-from agentes import MODELO, ejecutar_agente
-
-opciones = ClaudeAgentOptions(
-    model=MODELO,
-    system_prompt="Eres un analista de código. Responde en español.",
-    allowed_tools=["Read", "Glob", "Grep"],
-    max_turns=8,
-)
+agente = cargar("ejemplo_basico")
 
 if __name__ == "__main__":
-    asyncio.run(ejecutar_agente("Explica en 5 líneas qué hace este proyecto.", opciones))
+    asyncio.run(
+        ejecutar_agente(
+            agente.peticion_por_defecto, opciones_de_agente(agente), agente=agente.nombre, version=agente.version
+        )
+    )

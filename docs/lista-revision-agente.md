@@ -24,6 +24,11 @@ Cópiala en el pull request que añade o cambia un agente.
 - [ ] Salidas que lee el código con esquema JSON
 - [ ] `VERSION` actualizada
 
+## Plataforma real (regla T5)
+- [ ] Probado en un sandbox de Salesforce o una cuenta de prueba de Monday, con el resultado en el PR
+- [ ] Sus valores están en `config/` y documentados en `docs/CONFIGURACION.md`
+- [ ] `python -m redes` en verde
+
 ## Operación
 - [ ] Costo medido con ejecuciones reales y dentro del presupuesto
 - [ ] Alertas de costo y errores

@@ -2,7 +2,7 @@
 name = "agentes-base"
 version = "0.1.0"
 description = "Base para crear agentes con el Claude Agent SDK"
-requires-python = ">=3.10"
+requires-python = ">=3.11"  # tomllib; Python 3.10 terminó su soporte en octubre de 2026
 dependencies = [
     "claude-agent-sdk>=0.2.178",
     "python-dotenv>=1.0",
@@ -12,7 +12,7 @@ dependencies = [
 dev = ["pytest>=8", "pytest-asyncio>=0.23"]
 
 [tool.setuptools]
-packages = ["agentes"]
+packages = ["agentes", "redes"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

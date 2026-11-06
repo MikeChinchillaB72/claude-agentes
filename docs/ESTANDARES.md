@@ -1,7 +1,8 @@
 # Estándares para agentes
 
 Todo agente de este repositorio cumple estas reglas. Si alguna no aplica, el motivo queda
-escrito en el pull request.
+escrito en el pull request. Las reglas de trabajo generales (M1–M8, T1–T16) están en
+[REGLAS.md](REGLAS.md).
 
 **Principio:** toda regla de seguridad se impone en el código o en los permisos. El prompt
 solo la explica. Un modelo puede ser manipulado; una herramienta que no existe, no.
@@ -25,7 +26,7 @@ solo la explica. Un modelo puede ser manipulado; una herramienta que no existe, 
 
 ## 2. Seguridad
 
-1. **Mínimo privilegio.** `allowed_tools` solo contiene herramientas de lectura. Las que
+1. **Mínimo privilegio.** `allowed_tools` (`herramientas.lectura` en la configuración del agente) solo contiene herramientas de lectura. Las que
    escriben o tienen efectos pasan por `politica_de_herramientas()` y, sin aprobador, se deniegan.
 2. **Autorización en la herramienta.** Los identificadores de usuario o cliente salen de la
    sesión verificada, nunca de un parámetro que rellena el modelo.
@@ -46,7 +47,7 @@ solo la explica. Un modelo puede ser manipulado; una herramienta que no existe, 
 
 ## 3. Ingeniería
 
-- **Modelo.** Por defecto `claude-opus-5-5`. Bajar a Sonnet 5.5 o Haiku 5.5 solo si las
+- **Modelo.** Por defecto el de `modelo.nombre` en `config/agentes.toml`. Bajar a Sonnet 5.5 o Haiku 5.5 solo si las
   evaluaciones lo justifican. Controlar el razonamiento con `effort` antes de cambiar de modelo.
 - **Evaluaciones.** 30 a 100 casos reales por agente con la respuesta esperada, en `evals/<agente>/`.
   Se ejecutan en cada cambio de prompt, herramienta o modelo.

@@ -1,0 +1,20 @@
+# Revisiones antes de cada commit hecho a mano (fuera de Claude Code).
+# Instalación, una vez por clon:  pipx install pre-commit && pre-commit install
+# Detalle en docs/REGLAS.md (reglas T1 y T11).
+repos:
+  # Revisión completa de secretos. Versión fijada; comprobada el 2026-11-06
+  # en https://github.com/gitleaks/gitleaks/releases (v8.30.1, 2026-03-21).
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # Las redes del repositorio (python -m redes). Solo biblioteca estándar.
+  - repo: local
+    hooks:
+      - id: redes
+        name: redes de docs/REGLAS.md
+        entry: python3 -m redes
+        language: system
+        pass_filenames: false
+        always_run: true
