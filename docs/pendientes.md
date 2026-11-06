@@ -7,9 +7,6 @@
 
 - **P1 · Información para los plugins de Sales Cloud, Service Cloud, monday CRM y monday service.**
   Hacen falta los casos de uso del cliente para definir los 3 plugins de cada producto.
-- **P2 · Proteger la rama `main`** (Settings → Rules del repositorio): una regla que exija
-  los checks `redes-y-pytest` y `secretos` antes de fusionar. Solo el dueño del repositorio
-  puede hacerlo.
 
 ## Huecos medidos
 
