@@ -1,0 +1,30 @@
+# Configuración general de todos los agentes.
+#
+# Regla M7 de docs/REGLAS.md: ningún valor ajustable vive en el código.
+# Cada clave está explicada en docs/CONFIGURACION.md (la red `docs` exige que
+# toda clave nueva se documente allí).
+#
+# Una variable de entorno puede sustituir algunas claves sin tocar este archivo.
+# La tabla de equivalencias está en docs/CONFIGURACION.md.
+
+[modelo]
+# Modelo por defecto. Un agente puede usar otro con `agente.modelo` en su archivo.
+nombre = "claude-opus-5-5"
+
+[registro]
+# Nivel de los registros: DEBUG, INFO, WARNING o ERROR.
+nivel = "INFO"
+
+[sandbox]
+# Dominios a los que puede salir un agente con sandbox activado. Vacío = sin red.
+dominios_permitidos = []
+
+[datos_personales]
+# Texto que sustituye a cada dato personal en los registros.
+reemplazo = "[oculto]"
+
+# Expresiones regulares de lo que se tapa en los registros (regla T13).
+[datos_personales.patrones]
+email = '[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}'
+telefono = '\+?\d[\d\s().\-]{7,}\d'
+tarjeta = '\b(?:\d[ \-]?){13,19}\b'

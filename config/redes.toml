@@ -1,0 +1,104 @@
+# Configuración de las redes: las revisiones automáticas que hacen cumplir
+# docs/REGLAS.md. Se ejecutan con `python -m redes`, antes de cada commit
+# (hook de Claude Code y pre-commit) y en CI.
+#
+# Regla T3 de docs/REGLAS.md: toda excepción lleva su motivo escrito.
+# Una excepción sin `motivo` hace fallar la red.
+
+[general]
+# Rutas que ninguna red revisa, además de lo que ya ignora .gitignore.
+excluir = []
+
+# ── secretos ────────────────────────────────────────────────────────────────
+# Credenciales que nunca deben entrar al repositorio. Los formatos son los que
+# publica cada proveedor. Es una red de apoyo: la revisión completa la hace
+# gitleaks (pre-commit y CI).
+[secretos]
+archivos_prohibidos = [".env", "*.pem", "*.p8", "*.p12", "*.key"]
+
+[secretos.patrones]
+anthropic = 'sk-ant-[A-Za-z0-9_\-]{20,}'
+github = 'gh[pousr]_[A-Za-z0-9]{36,}'
+github_fino = 'github_pat_[A-Za-z0-9_]{22,}'
+aws = 'AKIA[0-9A-Z]{16}'
+slack = 'xox[abprs]-[A-Za-z0-9\-]{10,}'
+clave_privada = '-----BEGIN [A-Z ]*PRIVATE KEY-----'
+
+[[secretos.excepciones]]
+archivo = "config/redes.toml"
+motivo = "Contiene los patrones de búsqueda, no credenciales."
+
+# ── silencios ───────────────────────────────────────────────────────────────
+# Un `except` que solo hace `pass`, `return` o `continue` vuelve un fallo
+# idéntico a "no hay dato". Se permite solo con el marcador y su motivo en la
+# misma línea del `except`, por ejemplo:  except KeyError:  # silencio-permitido: <motivo>
+[silencios]
+carpetas = ["agentes", "ejemplos", "redes", ".claude/hooks"]
+marcador = "silencio-permitido:"
+
+# ── literales ───────────────────────────────────────────────────────────────
+# Valores ajustables escritos dentro del código Python (regla M7). Su sitio es config/.
+[literales]
+carpetas = ["agentes", "ejemplos", ".claude/hooks"]
+
+[literales.patrones]
+identificador_de_modelo = 'claude-(opus|sonnet|haiku|fable)-\d'
+max_turns = 'max_turns\s*=\s*\d'
+max_budget_usd = 'max_budget_usd\s*=\s*\d'
+
+# ── docstrings ──────────────────────────────────────────────────────────────
+# Regla M8: cada módulo, clase y función pública lleva docstring.
+[docstrings]
+carpetas = ["agentes", "ejemplos", "redes", ".claude/hooks"]
+
+# ── vocabulario ─────────────────────────────────────────────────────────────
+# Un solo nombre por producto. Nombres oficiales comprobados el 2026-11-06 en
+# salesforce.com/service y support.monday.com (fuentes en docs/REGLAS.md).
+[vocabulario]
+extensiones = [".md", ".py", ".toml", ".json", ".yml", ".yaml"]
+
+[[vocabulario.terminos]]
+correcto = "Sales Cloud"
+incorrectos = ["Sales cloud", "SalesCloud", "Agentforce Sales"]
+
+[[vocabulario.terminos]]
+correcto = "Service Cloud"
+incorrectos = ["Services Cloud", "Service cloud", "ServiceCloud", "Agentforce Service"]
+
+[[vocabulario.terminos]]
+correcto = "monday CRM"
+incorrectos = ["monday sales CRM", "Monday Sales CRM", "monday Sales CRM"]
+
+[[vocabulario.terminos]]
+correcto = "monday service"
+incorrectos = ["monday Services", "Monday Services", "monday services"]
+
+[[vocabulario.excepciones]]
+archivo = "config/redes.toml"
+motivo = "Es la lista de nombres incorrectos: tiene que nombrarlos."
+
+# ── generados ───────────────────────────────────────────────────────────────
+# Exportaciones de un documento que ya tiene su fuente. No se versionan: se
+# separan de su fuente y nadie lo nota.
+[generados]
+extensiones = [".pdf", ".docx", ".pptx", ".xlsx"]
+
+# ── pendientes ──────────────────────────────────────────────────────────────
+# Un pendiente cerrado se MUDA a hecho en el mismo commit; no se tacha en el sitio.
+[pendientes]
+archivo = "docs/pendientes.md"
+hecho = "docs/hecho.md"
+
+# ── docs ────────────────────────────────────────────────────────────────────
+# La documentación no puede mentir sobre el código.
+[docs]
+# Documento de reglas: debe nombrar cada red entre comillas invertidas.
+reglas = "docs/REGLAS.md"
+# Documento de configuración: debe nombrar cada clave de estas fuentes.
+configuracion = "docs/CONFIGURACION.md"
+fuentes_de_configuracion = ["config/agentes.toml", "config/agentes/plantilla.toml"]
+
+# Enlaces que un documento está obligado a tener.
+[docs.enlaces_obligatorios]
+"CLAUDE.md" = ["docs/REGLAS.md", "docs/ESTANDARES.md", "docs/README.md"]
+"README.md" = ["docs/README.md", "docs/REGLAS.md"]

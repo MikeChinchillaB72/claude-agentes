@@ -1,17 +1,25 @@
-"""Ejemplo 2: darle al agente una herramienta escrita en Python."""
+"""Ejemplo 2: darle al agente una herramienta escrita en Python.
+
+Su configuración está en config/agentes/ejemplo_herramienta_propia.toml y el
+inventario de prueba en config/datos/inventario_ejemplo.toml.
+"""
 
 import asyncio
 
-from claude_agent_sdk import ClaudeAgentOptions, create_sdk_mcp_server, tool
+from claude_agent_sdk import create_sdk_mcp_server, tool
 
-from agentes import MODELO, ejecutar_agente
+from agentes import cargar, ejecutar_agente, opciones_de_agente
+from agentes.configuracion import leer_toml, ruta_de_datos
 
-# Tus datos o sistemas reales irían aquí (una base de datos, una API...).
-INVENTARIO = {"teclado": 12, "ratón": 0, "monitor": 4}
+agente = cargar("ejemplo_herramienta_propia")
+
+# En un agente real, los datos vendrían de tu sistema (base de datos, API...).
+INVENTARIO: dict[str, int] = leer_toml(ruta_de_datos(agente, "inventario"))["productos"]
 
 
 @tool("consultar_stock", "Devuelve las unidades disponibles de un producto", {"producto": str})
 async def consultar_stock(args: dict) -> dict:
+    """Devuelve las unidades de `producto`, o un error si no existe en el inventario."""
     producto = args["producto"].lower()
     if producto not in INVENTARIO:
         return {"content": [{"type": "text", "text": f"No existe '{producto}'."}], "is_error": True}
@@ -20,14 +28,6 @@ async def consultar_stock(args: dict) -> dict:
 
 servidor = create_sdk_mcp_server(name="tienda", tools=[consultar_stock])
 
-opciones = ClaudeAgentOptions(
-    model=MODELO,
-    system_prompt="Eres el asistente de una tienda. Usa consultar_stock antes de responder.",
-    mcp_servers={"tienda": servidor},
-    # Las herramientas propias se llaman mcp__<servidor>__<herramienta>
-    allowed_tools=["mcp__tienda__consultar_stock"],
-    max_turns=5,
-)
-
 if __name__ == "__main__":
-    asyncio.run(ejecutar_agente("¿Tenemos ratones y monitores disponibles?", opciones))
+    opciones = opciones_de_agente(agente, mcp_servers={"tienda": servidor})
+    asyncio.run(ejecutar_agente(agente.peticion_por_defecto, opciones, agente=agente.nombre, version=agente.version))

@@ -1,0 +1,22 @@
+# Ejemplo 2: agente con una herramienta escrita en Python.
+
+[agente]
+nombre = "ejemplo_herramienta_propia"
+version = "0.1.0"
+descripcion = "Asistente de tienda que consulta el inventario."
+instrucciones = "Eres el asistente de una tienda. Usa consultar_stock antes de responder."
+peticion_por_defecto = "¿Tenemos ratones y monitores disponibles?"
+
+[herramientas]
+# Las herramientas propias se llaman mcp__<servidor>__<herramienta>.
+lectura = ["mcp__tienda__consultar_stock"]
+sensibles = []
+
+[limites]
+max_turnos = 5
+max_presupuesto_usd = 0.5
+sandbox = false  # no ejecuta comandos
+
+# Datos de prueba. En un agente real vendrían de tu sistema, no de un archivo.
+[datos]
+inventario = "config/datos/inventario_ejemplo.toml"

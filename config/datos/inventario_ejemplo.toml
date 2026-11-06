@@ -1,0 +1,5 @@
+# Inventario de prueba del ejemplo 2. Unidades disponibles por producto.
+[productos]
+teclado = 12
+"ratón" = 0
+monitor = 4

@@ -1,0 +1,17 @@
+# Ejemplo 1: agente que lee y explica los archivos de una carpeta.
+
+[agente]
+nombre = "ejemplo_basico"
+version = "0.1.0"
+descripcion = "Lee una carpeta y explica qué hace el proyecto."
+instrucciones = "Eres un analista de código. Responde en español."
+peticion_por_defecto = "Explica en 5 líneas qué hace este proyecto."
+
+[herramientas]
+lectura = ["Read", "Glob", "Grep"]
+sensibles = []
+
+[limites]
+max_turnos = 8
+max_presupuesto_usd = 0.5
+sandbox = false  # no ejecuta comandos: solo usa herramientas de lectura

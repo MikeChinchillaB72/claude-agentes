@@ -1,0 +1,28 @@
+# Ejemplo 3: un agente principal que delega en subagentes especializados.
+
+[agente]
+nombre = "ejemplo_subagentes"
+version = "0.1.0"
+descripcion = "Coordina una revisión de código con dos subagentes."
+instrucciones = "Coordinas una revisión. Delega en el subagente adecuado y resume en español."
+peticion_por_defecto = "Revisa la carpeta agentes/ y propone documentación que falte."
+
+[herramientas]
+# Agent y Task permiten delegar en subagentes.
+lectura = ["Read", "Glob", "Grep", "Agent", "Task"]
+sensibles = []
+
+[limites]
+max_turnos = 15
+max_presupuesto_usd = 1.0
+sandbox = false  # no ejecuta comandos
+
+[subagentes.revisor]
+descripcion = "Revisa código Python y señala errores y mejoras."
+instrucciones = "Eres un revisor de código exigente. Sé concreto: archivo, línea y motivo."
+herramientas = ["Read", "Glob", "Grep"]
+
+[subagentes.documentador]
+descripcion = "Propone documentación para funciones sin docstring."
+instrucciones = "Escribes docstrings breves y claros en español."
+herramientas = ["Read", "Glob"]

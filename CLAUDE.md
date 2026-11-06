@@ -1,8 +1,18 @@
 # claude-agentes
 
-Agentes de Claude en Python con el Claude Agent SDK. Se trabaja en español.
+Agentes y plugins de Claude en Python con el Claude Agent SDK. Se trabaja en español.
 
-- Lee y cumple `docs/ESTANDARES.md` en cualquier cambio a un agente.
-- Los agentes nuevos parten de `agentes/plantilla_agente.py` y se ejecutan con `ejecutar_agente()`.
-- Las herramientas con efectos nunca van en `allowed_tools`; usan `politica_de_herramientas()`.
-- Antes de proponer un cambio: `pytest`.
+- **Reglas de trabajo:** lee y cumple [docs/REGLAS.md](docs/REGLAS.md) en todo cambio
+  (M1–M8 de Miguel, T1–T16 de TeloHago). En corto: no asumir; investigar mejores
+  prácticas actuales antes de crear; preguntar a Miguel lo que es decisión suya y no
+  preguntar lo que se sabe; no dejar nada pendiente sin escribirlo en
+  `docs/pendientes.md`; documentar todo y el código; nada ajustable en el código.
+- **Estándares de agentes:** [docs/ESTANDARES.md](docs/ESTANDARES.md).
+- **Documentación:** la puerta de entrada es [docs/README.md](docs/README.md). Cada
+  jornada se anota en `docs/cambios_AAAA-MM-DD.md`.
+- Los agentes nuevos parten de `agentes/plantilla_agente.py` y `config/agentes/plantilla.toml`,
+  y se ejecutan con `ejecutar_agente()`. Sus valores van en `config/` ([docs/CONFIGURACION.md](docs/CONFIGURACION.md)).
+- Las herramientas con efectos nunca van en `herramientas.lectura`; van en `herramientas.sensibles`
+  y pasan por `politica_de_herramientas()`.
+- Antes de proponer un cambio: `python -m redes` y `pytest`. El hook de commit corre las redes
+  y deniega el commit si alguna falla: arregla el fallo, no lo silencies.
