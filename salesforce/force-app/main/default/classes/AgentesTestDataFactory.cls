@@ -43,6 +43,12 @@ public class AgentesTestDataFactory {
     /** Usuario que lee oportunidades pero no las edita ni crea tareas. */
     public static final String APELLIDO_SOLO_LECTURA = 'PRUEBA-SoloLectura';
 
+    /**
+     * Se lanza si la org no tiene un perfil con permisos mínimos para los usuarios de prueba.
+     * Apex no trae `IllegalStateException`, así que la fábrica define la suya.
+     */
+    public class PerfilNoEncontradoException extends Exception {}
+
     /** Nombre del conjunto de permisos de solo lectura que se crea en la prueba. */
     private static final String PERMISOS_SOLO_LECTURA = 'PRUEBA_Agentes_Solo_Lectura';
 
@@ -212,7 +218,7 @@ public class AgentesTestDataFactory {
             LIMIT 1
         ];
         if (perfiles.isEmpty()) {
-            throw new IllegalStateException(
+            throw new PerfilNoEncontradoException(
                 'La org no tiene un perfil de licencia Salesforce sin acceso a oportunidades ni a tareas ' +
                 '(por ejemplo «Minimum Access - Salesforce»); las pruebas de permisos lo necesitan.'
             );
