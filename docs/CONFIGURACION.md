@@ -73,6 +73,21 @@ entorno o en un gestor de secretos, nunca en `config/`.
 | `subagentes.<clave>` | tabla | no | Un subagente en el que puede delegar: `descripcion`, `instrucciones` y `herramientas` |
 | `datos.<clave>` | texto | no | Ruta, desde la raíz del repositorio, de un archivo de datos del agente |
 
+## Plugins (`plugins/<nombre>/`)
+
+Los plugins no leen `config/`: Claude solo recibe la carpeta del plugin. Sus valores viven
+dentro de ella, en archivos que se cambian sin tocar las instrucciones:
+
+| Archivo | Qué se configura |
+|---|---|
+| `.mcp.json` | La URL de cada conector: `salesforce` (servidor SObject Reads de producción) y `monday`. Para un sandbox de Salesforce se cambia la URL en el conector de la organización (ver [cliente/instalacion-salesforce.md](cliente/instalacion-salesforce.md)) |
+| `skills/<skill>/references/criterios.md` | Los criterios de negocio de la empresa (umbrales, rúbricas, categorías) y el mapeo de tableros y columnas de monday.com |
+| `.claude-plugin/plugin.json` | Nombre, versión y descripción |
+| [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) (raíz) | El catálogo `agentes-crm` con los seis plugins |
+
+El Client ID y el Client Secret de cada plataforma **no** van en ningún archivo: se ponen en la
+configuración del conector en Claude.
+
 ## Lo que no es configurable, a propósito
 
 Las invariantes de seguridad están en `agentes/comun.py` y ningún archivo las

@@ -1,0 +1,18 @@
+{
+  "name": "servicio-clasificacion-casos",
+  "displayName": "Clasificación y priorización de casos",
+  "version": "0.1.0",
+  "description": "Revisa los casos sin clasificar y propone para cada uno categoría, prioridad y un resumen, con el motivo, para que el agente o el supervisor los aplique. Solo lee: funciona con Service Cloud o monday service.",
+  "author": {
+    "name": "Miguel Chinchilla Borjas"
+  },
+  "repository": "https://github.com/MikeChinchillaB72/claude-agentes",
+  "keywords": [
+    "servicio",
+    "crm",
+    "salesforce",
+    "monday",
+    "service-cloud",
+    "monday-service"
+  ]
+}

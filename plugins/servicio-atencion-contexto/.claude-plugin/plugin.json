@@ -1,0 +1,18 @@
+{
+  "name": "servicio-atencion-contexto",
+  "displayName": "Atención con contexto del cliente",
+  "version": "0.1.0",
+  "description": "Reúne la cuenta, los contactos y los casos del cliente antes de responder, resume su situación y propone la respuesta y si conviene escalar. Solo lee: funciona con Service Cloud o monday service.",
+  "author": {
+    "name": "Miguel Chinchilla Borjas"
+  },
+  "repository": "https://github.com/MikeChinchillaB72/claude-agentes",
+  "keywords": [
+    "servicio",
+    "crm",
+    "salesforce",
+    "monday",
+    "service-cloud",
+    "monday-service"
+  ]
+}

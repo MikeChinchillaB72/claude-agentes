@@ -12,6 +12,9 @@ Agentes y plugins de Claude en Python con el Claude Agent SDK. Se trabaja en esp
   jornada se anota en `docs/cambios_AAAA-MM-DD.md`.
 - Los agentes nuevos parten de `agentes/plantilla_agente.py` y `config/agentes/plantilla.toml`,
   y se ejecutan con `ejecutar_agente()`. Sus valores van en `config/` ([docs/CONFIGURACION.md](docs/CONFIGURACION.md)).
+- Los plugins están en `plugins/` y su catálogo en `.claude-plugin/marketplace.json`. Son de solo
+  lectura (servidor `sobject-reads` y app de monday.com sin *scopes* de escritura). Comprueba
+  con `claude plugin validate .` y actualiza sus 7 documentos y `docs/cliente/` en el mismo cambio.
 - Las herramientas con efectos nunca van en `herramientas.lectura`; van en `herramientas.sensibles`
   y pasan por `politica_de_herramientas()`.
 - Antes de proponer un cambio: `python -m redes` y `pytest`. El hook de commit corre las redes
