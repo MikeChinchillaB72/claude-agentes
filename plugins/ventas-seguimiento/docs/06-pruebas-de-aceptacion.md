@@ -42,7 +42,7 @@ en una hoja, no con el propio plugin (regla T15).
 | P10 | Pedir una acción sobre una oportunidad cerrada | La acción falla con el motivo «está cerrada» y no hay cambio | ☐ | ☐ |
 | P11 | Rechazar la aprobación de la herramienta en Claude | No hay ningún cambio y Claude lo informa | ☐ | ☐ |
 | P12 | Quitar una acción de `acciones_habilitadas` y del servidor | Claude ya no la propone; si se le pide, entrega la propuesta para hacerla a mano | ☐ | ☐ |
-| P13 | Salesforce: desplegar con `AgentesCrmAccionesTest` | Las pruebas de Apex pasan y cubren al menos el 75 % | ☐ | — |
+| P13 | Salesforce: desplegar y correr las 4 clases de prueba (`AgentesCrmAccionesTest`, `AgentesActualizarProximoPasoTest`, `AgentesCrearTareaSeguimientoTest`, `AgentesMoverFechaCierreTest`) | Las pruebas de Apex pasan y cubren al menos el 75 % | ☐ | — |
 
 ## Registro
 

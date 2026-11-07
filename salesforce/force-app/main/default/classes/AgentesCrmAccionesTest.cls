@@ -1,214 +1,193 @@
 /**
- * Pruebas de las acciones de `ventas-seguimiento`: `AgentesActualizarProximoPaso`,
- * `AgentesCrearTareaSeguimiento`, `AgentesMoverFechaCierre` y sus reglas comunes en
- * `AgentesCrmAcciones`.
+ * Pruebas de `AgentesCrmAcciones`, las reglas comunes de las acciones.
  *
- * Cada regla se prueba también rota a propósito (regla T2): oportunidad cerrada, Id de
- * otro objeto, fecha pasada, texto vacío o demasiado largo e Id repetido. Las etapas se
- * leen de la org (`OpportunityStage`) para no depender de sus nombres.
+ * Cada regla se prueba en su caso válido y rota a propósito (regla T2). Los datos vienen
+ * de `AgentesTestDataFactory`. Las acciones tienen cada una su propia clase de prueba.
  */
 @IsTest
 private class AgentesCrmAccionesTest {
 
     @TestSetup
     static void crearDatos() {
-        OpportunityStage abierta = [
-            SELECT ApiName FROM OpportunityStage
-            WHERE IsActive = true AND IsClosed = false
-            ORDER BY SortOrder LIMIT 1
-        ];
-        OpportunityStage cerrada = [
-            SELECT ApiName FROM OpportunityStage
-            WHERE IsActive = true AND IsClosed = true
-            ORDER BY SortOrder LIMIT 1
-        ];
-        Account cuenta = new Account(Name = 'PRUEBA-Acciones');
-        insert cuenta;
-        insert new Contact(LastName = 'PRUEBA-Contacto', AccountId = cuenta.Id);
-        insert new List<Opportunity>{
-            new Opportunity(Name = 'PRUEBA-Abierta', AccountId = cuenta.Id, StageName = abierta.ApiName,
-                CloseDate = Date.today().addDays(-3), NextStep = 'Paso viejo'),
-            new Opportunity(Name = 'PRUEBA-Cerrada', AccountId = cuenta.Id, StageName = cerrada.ApiName,
-                CloseDate = Date.today().addDays(-10))
-        };
+        AgentesTestDataFactory.crearEscenario(AgentesTestDataFactory.CANTIDAD_MASIVA);
     }
 
-    private static Opportunity oportunidad(String nombre) {
-        return [SELECT Id, NextStep, CloseDate FROM Opportunity WHERE Name = :nombre];
-    }
-
-    // ── Actualizar próximo paso ──────────────────────────────────────────────
-
-    private static AgentesActualizarProximoPaso.Solicitud pasoSolicitud(Id oportunidadId, String texto) {
-        AgentesActualizarProximoPaso.Solicitud solicitud = new AgentesActualizarProximoPaso.Solicitud();
-        solicitud.oportunidadId = oportunidadId;
-        solicitud.proximoPaso = texto;
-        return solicitud;
-    }
+    // ── leerOportunidades ───────────────────────────────────────────────────
 
     @IsTest
-    static void proximoPasoSeGuarda() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
+    static void leerOportunidadesDevuelveLaPedidaConSusCampos() {
+        Opportunity abierta = AgentesTestDataFactory.primeraAbierta();
         Test.startTest();
-        List<AgentesActualizarProximoPaso.Resultado> resultados = AgentesActualizarProximoPaso.ejecutar(
-            new List<AgentesActualizarProximoPaso.Solicitud>{ pasoSolicitud(abierta.Id, '  Enviar propuesta  ') }
+        Map<Id, Opportunity> encontradas = AgentesCrmAcciones.leerOportunidades(
+            new Set<Id>{ abierta.Id },
+            new List<String>{ AgentesCrmAcciones.CAMPO_PROXIMO_PASO, AgentesCrmAcciones.CAMPO_FECHA_CIERRE }
         );
         Test.stopTest();
-        Assert.isTrue(resultados[0].exito, resultados[0].mensaje);
-        Assert.areEqual('Paso viejo', resultados[0].valorAnterior);
-        Assert.areEqual('Enviar propuesta', oportunidad('PRUEBA-Abierta').NextStep);
+        Assert.areEqual(1, encontradas.size());
+        Assert.areEqual(AgentesTestDataFactory.PASO_INICIAL, encontradas.get(abierta.Id).NextStep);
+        Assert.areEqual(Date.today().addDays(-AgentesTestDataFactory.DIAS_VENCIDA), encontradas.get(abierta.Id).CloseDate);
+        Assert.isFalse(encontradas.get(abierta.Id).IsClosed);
     }
 
     @IsTest
-    static void proximoPasoNoTocaOportunidadCerrada() {
-        Opportunity cerrada = oportunidad('PRUEBA-Cerrada');
-        List<AgentesActualizarProximoPaso.Resultado> resultados = AgentesActualizarProximoPaso.ejecutar(
-            new List<AgentesActualizarProximoPaso.Solicitud>{ pasoSolicitud(cerrada.Id, 'Algo') }
+    static void leerOportunidadesIgnoraNulosEIdsDeOtroObjeto() {
+        Id cuentaId = AgentesTestDataFactory.cuenta().Id;
+        Test.startTest();
+        Map<Id, Opportunity> encontradas = AgentesCrmAcciones.leerOportunidades(
+            new Set<Id>{ null, cuentaId }, new List<String>()
         );
-        Assert.isFalse(resultados[0].exito);
-        Assert.isTrue(resultados[0].mensaje.contains('cerrada'), resultados[0].mensaje);
-        Assert.isNull(oportunidad('PRUEBA-Cerrada').NextStep);
+        Integer consultas = Limits.getQueries();
+        Test.stopTest();
+        Assert.isTrue(encontradas.isEmpty());
+        Assert.areEqual(0, consultas, 'Sin Ids de oportunidad válidos no se consulta.');
     }
 
     @IsTest
-    static void proximoPasoRechazaVacioLargoYRepetido() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
-        Integer largoMaximo = Opportunity.NextStep.getDescribe().getLength();
-        List<AgentesActualizarProximoPaso.Resultado> resultados = AgentesActualizarProximoPaso.ejecutar(
-            new List<AgentesActualizarProximoPaso.Solicitud>{
-                pasoSolicitud(abierta.Id, '   '),
-                pasoSolicitud(abierta.Id, 'x'.repeat(largoMaximo + 1)),
-                pasoSolicitud(abierta.Id, 'Primero'),
-                pasoSolicitud(abierta.Id, 'Repetido')
-            }
-        );
-        Assert.isFalse(resultados[0].exito, 'Texto vacío');
-        Assert.isFalse(resultados[1].exito, 'Texto largo');
-        Assert.isTrue(resultados[2].exito, resultados[2].mensaje);
-        Assert.isFalse(resultados[3].exito, 'Id repetido');
-        Assert.areEqual('Primero', oportunidad('PRUEBA-Abierta').NextStep);
-    }
-
-    @IsTest
-    static void proximoPasoRechazaIdDeOtroObjeto() {
-        Account cuenta = [SELECT Id FROM Account WHERE Name = 'PRUEBA-Acciones'];
-        List<AgentesActualizarProximoPaso.Resultado> resultados = AgentesActualizarProximoPaso.ejecutar(
-            new List<AgentesActualizarProximoPaso.Solicitud>{ pasoSolicitud(cuenta.Id, 'Algo') }
-        );
-        Assert.isFalse(resultados[0].exito);
-        Assert.isTrue(resultados[0].mensaje.contains('no es de una oportunidad'), resultados[0].mensaje);
-    }
-
-    // ── Mover fecha de cierre ────────────────────────────────────────────────
-
-    private static AgentesMoverFechaCierre.Solicitud fechaSolicitud(Id oportunidadId, Date fecha) {
-        AgentesMoverFechaCierre.Solicitud solicitud = new AgentesMoverFechaCierre.Solicitud();
-        solicitud.oportunidadId = oportunidadId;
-        solicitud.nuevaFechaCierre = fecha;
-        return solicitud;
-    }
-
-    @IsTest
-    static void fechaDeCierreSeMueve() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
-        Date nueva = Date.today().addDays(14);
-        List<AgentesMoverFechaCierre.Resultado> resultados = AgentesMoverFechaCierre.ejecutar(
-            new List<AgentesMoverFechaCierre.Solicitud>{ fechaSolicitud(abierta.Id, nueva) }
-        );
-        Assert.isTrue(resultados[0].exito, resultados[0].mensaje);
-        Assert.areEqual(abierta.CloseDate, resultados[0].fechaAnterior);
-        Assert.areEqual(nueva, oportunidad('PRUEBA-Abierta').CloseDate);
-    }
-
-    @IsTest
-    static void fechaDeCierreRechazaPasadaYCerrada() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
-        Opportunity cerrada = oportunidad('PRUEBA-Cerrada');
-        List<AgentesMoverFechaCierre.Resultado> resultados = AgentesMoverFechaCierre.ejecutar(
-            new List<AgentesMoverFechaCierre.Solicitud>{
-                fechaSolicitud(abierta.Id, Date.today().addDays(-1)),
-                fechaSolicitud(cerrada.Id, Date.today().addDays(5)),
-                fechaSolicitud(abierta.Id, null)
-            }
-        );
-        Assert.isFalse(resultados[0].exito, 'Fecha pasada');
-        Assert.isFalse(resultados[1].exito, 'Oportunidad cerrada');
-        Assert.isFalse(resultados[2].exito, 'Sin fecha');
-        Assert.areEqual(abierta.CloseDate, oportunidad('PRUEBA-Abierta').CloseDate);
-    }
-
-    // ── Crear tarea de seguimiento ──────────────────────────────────────────
-
-    private static AgentesCrearTareaSeguimiento.Solicitud tareaSolicitud(Id oportunidadId, String asunto, Date fecha) {
-        AgentesCrearTareaSeguimiento.Solicitud solicitud = new AgentesCrearTareaSeguimiento.Solicitud();
-        solicitud.oportunidadId = oportunidadId;
-        solicitud.asunto = asunto;
-        solicitud.fechaVencimiento = fecha;
-        return solicitud;
-    }
-
-    @IsTest
-    static void tareaSeCreaLigadaYAsignadaAlUsuario() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
-        Contact contacto = [SELECT Id FROM Contact WHERE LastName = 'PRUEBA-Contacto'];
-        AgentesCrearTareaSeguimiento.Solicitud solicitud = tareaSolicitud(abierta.Id, 'Llamar a Ana', Date.today().addDays(2));
-        solicitud.contactoId = contacto.Id;
-        solicitud.descripcion = 'Confirmar la propuesta.';
-        List<AgentesCrearTareaSeguimiento.Resultado> resultados = AgentesCrearTareaSeguimiento.ejecutar(
-            new List<AgentesCrearTareaSeguimiento.Solicitud>{ solicitud }
-        );
-        Assert.isTrue(resultados[0].exito, resultados[0].mensaje);
-        Task tarea = [SELECT WhatId, WhoId, OwnerId, Subject, ActivityDate FROM Task WHERE Id = :resultados[0].tareaId];
-        Assert.areEqual(abierta.Id, tarea.WhatId);
-        Assert.areEqual(contacto.Id, tarea.WhoId);
-        Assert.areEqual(UserInfo.getUserId(), tarea.OwnerId);
-        Assert.areEqual(Date.today().addDays(2), tarea.ActivityDate);
-    }
-
-    @IsTest
-    static void tareaRechazaDatosInvalidos() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
-        Opportunity cerrada = oportunidad('PRUEBA-Cerrada');
-        AgentesCrearTareaSeguimiento.Solicitud conCuentaComoContacto = tareaSolicitud(abierta.Id, 'Asunto', Date.today());
-        conCuentaComoContacto.contactoId = [SELECT Id FROM Account WHERE Name = 'PRUEBA-Acciones'].Id;
-        List<AgentesCrearTareaSeguimiento.Resultado> resultados = AgentesCrearTareaSeguimiento.ejecutar(
-            new List<AgentesCrearTareaSeguimiento.Solicitud>{
-                tareaSolicitud(cerrada.Id, 'Asunto', Date.today()),
-                tareaSolicitud(abierta.Id, '', Date.today()),
-                tareaSolicitud(abierta.Id, 'Asunto', Date.today().addDays(-1)),
-                conCuentaComoContacto
-            }
-        );
-        for (AgentesCrearTareaSeguimiento.Resultado resultado : resultados) {
-            Assert.isFalse(resultado.exito, resultado.mensaje);
-        }
-        Assert.areEqual(0, [SELECT COUNT() FROM Task WHERE WhatId = :abierta.Id]);
-    }
-
-    @IsTest
-    static void variasTareasParaLaMismaOportunidad() {
-        Opportunity abierta = oportunidad('PRUEBA-Abierta');
-        List<AgentesCrearTareaSeguimiento.Resultado> resultados = AgentesCrearTareaSeguimiento.ejecutar(
-            new List<AgentesCrearTareaSeguimiento.Solicitud>{
-                tareaSolicitud(abierta.Id, 'Uno', Date.today()),
-                tareaSolicitud(abierta.Id, 'Dos', Date.today().addDays(1))
-            }
-        );
-        Assert.isTrue(resultados[0].exito && resultados[1].exito);
-        Assert.areEqual(2, [SELECT COUNT() FROM Task WHERE WhatId = :abierta.Id]);
-    }
-
-    // ── Reglas comunes ──────────────────────────────────────────────────────
-
-    @IsTest
-    static void consultaNoAceptaCamposFueraDeLaLista() {
+    static void leerOportunidadesRechazaCampoFueraDeLaLista() {
+        Opportunity abierta = AgentesTestDataFactory.primeraAbierta();
+        Test.startTest();
         try {
-            AgentesCrmAcciones.leerOportunidades(
-                new Set<Id>{ oportunidad('PRUEBA-Abierta').Id }, new List<String>{ 'Amount' }
-            );
+            AgentesCrmAcciones.leerOportunidades(new Set<Id>{ abierta.Id }, new List<String>{ 'Amount' });
             Assert.fail('Debió rechazar un campo fuera de la lista.');
         } catch (IllegalArgumentException e) {
-            Assert.isTrue(e.getMessage().contains('Amount'));
+            Assert.isTrue(e.getMessage().contains('Amount'), e.getMessage());
         }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void leerOportunidadesMasivoUsaUnaSolaConsulta() {
+        Set<Id> ids = AgentesTestDataFactory.ids(AgentesTestDataFactory.abiertas());
+        Test.startTest();
+        Map<Id, Opportunity> encontradas = AgentesCrmAcciones.leerOportunidades(
+            ids, new List<String>{ AgentesCrmAcciones.CAMPO_PROXIMO_PASO }
+        );
+        Integer consultas = Limits.getQueries();
+        Test.stopTest();
+        Assert.areEqual(AgentesTestDataFactory.CANTIDAD_MASIVA, encontradas.size());
+        Assert.areEqual(ids, encontradas.keySet());
+        Assert.areEqual(1, consultas);
+    }
+
+    @IsTest
+    static void leerOportunidadesSinPermisoDelUsuarioLanzaQueryException() {
+        Id abiertaId = AgentesTestDataFactory.primeraAbierta().Id;
+        User sinAcceso = AgentesTestDataFactory.usuario(AgentesTestDataFactory.APELLIDO_SIN_ACCESO);
+        Test.startTest();
+        System.runAs(sinAcceso) {
+            try {
+                AgentesCrmAcciones.leerOportunidades(new Set<Id>{ abiertaId }, new List<String>());
+                Assert.fail('Un usuario sin permiso de lectura no debe leer oportunidades.');
+            } catch (QueryException e) {
+                Assert.isNotNull(e.getMessage());
+            }
+        }
+        Test.stopTest();
+    }
+
+    // ── validarOportunidadAbierta ───────────────────────────────────────────
+
+    @IsTest
+    static void validarOportunidadAbiertaAceptaUnaAbierta() {
+        Opportunity abierta = AgentesTestDataFactory.primeraAbierta();
+        Test.startTest();
+        Map<Id, Opportunity> encontradas = AgentesCrmAcciones.leerOportunidades(new Set<Id>{ abierta.Id }, new List<String>());
+        String error = AgentesCrmAcciones.validarOportunidadAbierta(abierta.Id, encontradas);
+        Test.stopTest();
+        Assert.isNull(error);
+    }
+
+    @IsTest
+    static void validarOportunidadAbiertaRechazaNuloOtroObjetoNoEncontradaYCerrada() {
+        Id cerradaId = AgentesTestDataFactory.cerrada().Id;
+        Id abiertaId = AgentesTestDataFactory.primeraAbierta().Id;
+        Id cuentaId = AgentesTestDataFactory.cuenta().Id;
+        Test.startTest();
+        Map<Id, Opportunity> soloCerrada = AgentesCrmAcciones.leerOportunidades(new Set<Id>{ cerradaId }, new List<String>());
+        String sinId = AgentesCrmAcciones.validarOportunidadAbierta(null, soloCerrada);
+        String otroObjeto = AgentesCrmAcciones.validarOportunidadAbierta(cuentaId, soloCerrada);
+        String noEncontrada = AgentesCrmAcciones.validarOportunidadAbierta(abiertaId, soloCerrada);
+        String cerrada = AgentesCrmAcciones.validarOportunidadAbierta(cerradaId, soloCerrada);
+        Test.stopTest();
+        Assert.isTrue(sinId.contains('Falta'), sinId);
+        Assert.isTrue(otroObjeto.contains('no es de una oportunidad'), otroObjeto);
+        Assert.isTrue(noEncontrada.contains('no existe o el usuario no tiene acceso'), noEncontrada);
+        Assert.isTrue(cerrada.contains('cerrada'), cerrada);
+    }
+
+    // ── reservarUnaVez ──────────────────────────────────────────────────────
+
+    @IsTest
+    static void reservarUnaVezSoloAceptaLaPrimera() {
+        Id abiertaId = AgentesTestDataFactory.primeraAbierta().Id;
+        Set<Id> yaUsadas = new Set<Id>();
+        Test.startTest();
+        String primera = AgentesCrmAcciones.reservarUnaVez(abiertaId, yaUsadas);
+        String segunda = AgentesCrmAcciones.reservarUnaVez(abiertaId, yaUsadas);
+        Test.stopTest();
+        Assert.isNull(primera);
+        Assert.isTrue(segunda.contains('más de una vez'), segunda);
+        Assert.areEqual(new Set<Id>{ abiertaId }, yaUsadas);
+    }
+
+    // ── validarFechaNoPasada ────────────────────────────────────────────────
+
+    @IsTest
+    static void validarFechaNoPasadaAceptaHoyYPosterior() {
+        Test.startTest();
+        String hoy = AgentesCrmAcciones.validarFechaNoPasada(Date.today(), 'La fecha');
+        String manana = AgentesCrmAcciones.validarFechaNoPasada(Date.today().addDays(1), 'La fecha');
+        Test.stopTest();
+        Assert.isNull(hoy);
+        Assert.isNull(manana);
+    }
+
+    @IsTest
+    static void validarFechaNoPasadaRechazaNulaYPasada() {
+        Date ayer = Date.today().addDays(-1);
+        Test.startTest();
+        String nula = AgentesCrmAcciones.validarFechaNoPasada(null, 'La fecha');
+        String pasada = AgentesCrmAcciones.validarFechaNoPasada(ayer, 'La fecha');
+        Test.stopTest();
+        Assert.areEqual('Falta la fecha.', nula);
+        Assert.isTrue(pasada.contains(String.valueOf(ayer)) && pasada.contains('ya pasó'), pasada);
+    }
+
+    // ── validarTexto ────────────────────────────────────────────────────────
+
+    @IsTest
+    static void validarTextoAceptaElMaximoSinContarEspacios() {
+        Test.startTest();
+        String error = AgentesCrmAcciones.validarTexto('  ' + 'x'.repeat(10) + '  ', 'El texto', 10);
+        Test.stopTest();
+        Assert.isNull(error);
+    }
+
+    @IsTest
+    static void validarTextoRechazaVacioYLargo() {
+        Test.startTest();
+        String nulo = AgentesCrmAcciones.validarTexto(null, 'El texto', 10);
+        String blanco = AgentesCrmAcciones.validarTexto('   ', 'El texto', 10);
+        String largo = AgentesCrmAcciones.validarTexto('x'.repeat(11), 'El texto', 10);
+        Test.stopTest();
+        Assert.areEqual('El texto no puede estar vacío.', nulo);
+        Assert.areEqual('El texto no puede estar vacío.', blanco);
+        Assert.areEqual('El texto tiene 11 caracteres; el máximo es 10.', largo);
+    }
+
+    // ── resumirErrores ──────────────────────────────────────────────────────
+
+    @IsTest
+    static void resumirErroresJuntaLosMensajesDelDml() {
+        Test.startTest();
+        // Una cuenta sin nombre falla con un error real de Salesforce.
+        Database.SaveResult fallido = Database.insert(new Account(), false);
+        String resumen = AgentesCrmAcciones.resumirErrores(fallido.getErrors());
+        String vacio = AgentesCrmAcciones.resumirErrores(new List<Database.Error>());
+        Test.stopTest();
+        Assert.isFalse(fallido.isSuccess());
+        Assert.areEqual(fallido.getErrors()[0].getMessage(), resumen.split(' \\| ')[0]);
+        Assert.areEqual(fallido.getErrors().size(), resumen.split(' \\| ').size());
+        Assert.areEqual('', vacio);
     }
 }

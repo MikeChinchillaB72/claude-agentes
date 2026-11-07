@@ -31,8 +31,9 @@
 
 - **P10 · Acciones de Salesforce sin desplegar.** Las clases de [salesforce/](../salesforce/README.md)
   pasan un analizador de sintaxis de Apex (`prettier-plugin-apex`), pero no se han compilado ni probado
-  en una org: este entorno no tiene acceso a una. Falta: desplegarlas en la Developer Edition con sus
-  pruebas, crear el servidor `AgentesCRM`, comprobar su URL (también en sandbox), el nombre con que
+  en una org: este entorno no tiene acceso a una. El 2026-11-07 Miguel creó las cuatro clases en su
+  Developer Edition. Falta: crear `AgentesTestDataFactory` y las cuatro clases de prueba, correrlas y ver
+  la cobertura (al menos 75 %), crear el servidor `AgentesCRM`, comprobar su URL (también en sandbox), el nombre con que
   publica cada herramienta, cómo las agrupa claude.ai en *Tool permissions*, y pasar las pruebas
   P6 a P13 de `ventas-seguimiento`. En monday.com, comprobar que una app con `boards:write` y las
   herramientas sobrantes en *Never* no puede hacer más que las tres acciones.

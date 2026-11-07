@@ -17,8 +17,33 @@ para ejecutar estas acciones, cada una con sus validaciones.
 | `AgentesCrearTareaSeguimiento` | Crear tarea de seguimiento en una oportunidad | Crea una `Task` ligada a la oportunidad, asignada al usuario conectado | `ventas-seguimiento` |
 | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | Cambia `CloseDate` a hoy o una fecha posterior | `ventas-seguimiento` |
 
-`AgentesCrmAcciones` guarda las reglas comunes (regla T10) y `AgentesCrmAccionesTest` las prueba,
-también rotas a propósito (regla T2).
+`AgentesCrmAcciones` guarda las reglas comunes (regla T10).
+
+## Pruebas
+
+Cada clase tiene su clase de prueba, como pide Salesforce
+([Apex Developer Guide: Testing Best Practices](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm)):
+
+| Clase | Su prueba |
+|---|---|
+| `AgentesCrmAcciones` | `AgentesCrmAccionesTest` |
+| `AgentesActualizarProximoPaso` | `AgentesActualizarProximoPasoTest` |
+| `AgentesCrearTareaSeguimiento` | `AgentesCrearTareaSeguimientoTest` |
+| `AgentesMoverFechaCierre` | `AgentesMoverFechaCierreTest` |
+
+Los datos los crea una sola fábrica, `AgentesTestDataFactory` (`@IsTest`). Cada clase de prueba:
+
+- Prueba el caso válido y cada regla rota a propósito (regla T2), y en los casos que fallan
+  comprueba que el registro no cambió.
+- Corre un lote de 200 registros (el tamaño de un lote de trigger) en una sola llamada.
+- Corre la acción con `System.runAs` como dos usuarios con permisos mínimos: uno que no lee
+  oportunidades y otro que solo las lee (con un Permission Set creado en la prueba). Las dos deben
+  fallar sin cambiar nada, sea cual sea la compartición de la org.
+- Usa `Test.startTest()`/`Test.stopTest()` en cada prueba y la clase `Assert`.
+
+El perfil de los usuarios de prueba se busca por sus permisos, no por su nombre, porque Salesforce traduce
+los nombres de los perfiles estándar al idioma del usuario. En una org nueva, la búsqueda da
+«Minimum Access - Salesforce».
 
 ## Reglas que cumplen todas
 
@@ -37,10 +62,14 @@ Con [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli), desd
 
 ```bash
 sf org login web --alias agentes-crm
-sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest
+sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest
 ```
 
 En producción, Salesforce exige que las pruebas pasen y cubran al menos el 75 % del Apex.
+
+Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las cuatro clases de prueba
+(**File > New > Apex Class**), y correrlas con **Test > New Run**. La cobertura de cada clase sale en la
+pestaña **Tests** y en **Overall Code Coverage**.
 
 ## Crear el servidor MCP personalizado
 
