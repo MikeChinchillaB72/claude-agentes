@@ -1,7 +1,7 @@
 # Estándares para agentes
 
 Todo agente de este repositorio cumple estas reglas. Si alguna no aplica, el motivo queda
-escrito en el pull request. Las reglas de trabajo generales (M1–M8, T1–T16) están en
+escrito en el pull request. Las reglas de trabajo generales (M1–M9, T1–T16) están en
 [REGLAS.md](REGLAS.md).
 
 **Principio:** toda regla de seguridad se impone en el código o en los permisos. El prompt

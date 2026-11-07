@@ -3,7 +3,7 @@
 Encuentra las oportunidades abiertas que llevan días sin actividad, lee el historial reciente de cada una y redacta un correo de seguimiento y un próximo paso. El vendedor revisa el borrador y lo envía él mismo.
 
 Funciona con **Salesforce Sales Cloud** o con **monday CRM**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.0) **solo lee** el CRM.
+conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
 
 ## Usarlo
 

@@ -3,7 +3,7 @@
 Puntúa un lead de 0 a 100 con la rúbrica de la empresa, justifica la puntuación, busca duplicados y propone si conviene convertirlo y a quién asignarlo. La decisión y la conversión las hace el vendedor o el responsable de leads.
 
 Funciona con **Salesforce Sales Cloud** o con **monday CRM**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.0) **solo lee** el CRM.
+conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
 
 ## Usarlo
 

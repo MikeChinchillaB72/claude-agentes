@@ -1,6 +1,6 @@
 # Levantamiento de requisitos: Atención con contexto del cliente
 
-> Plugin `servicio-atencion-contexto` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-atencion-contexto` 0.1.1. Actualizado: 2026-11-07.
 > **Estado: pendiente de la información del cliente.** Lo marcado `PENDIENTE` no se ha
 > inventado: lo tiene que aportar la empresa (P1 en [pendientes](../../../docs/pendientes.md)).
 

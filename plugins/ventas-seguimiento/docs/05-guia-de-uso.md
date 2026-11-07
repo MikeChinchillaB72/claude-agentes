@@ -1,6 +1,6 @@
 # Guía de uso: Seguimiento de oportunidades
 
-> Plugin `ventas-seguimiento` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-seguimiento` 0.1.1. Actualizado: 2026-11-07.
 
 **Para:** vendedores y ejecutivos de cuenta que gestionan oportunidades abiertas.
 

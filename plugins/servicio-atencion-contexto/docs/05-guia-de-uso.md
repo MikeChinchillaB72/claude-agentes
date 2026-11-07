@@ -1,6 +1,6 @@
 # Guía de uso: Atención con contexto del cliente
 
-> Plugin `servicio-atencion-contexto` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-atencion-contexto` 0.1.1. Actualizado: 2026-11-07.
 
 **Para:** agentes y supervisores de soporte. No es un chat para los clientes finales.
 

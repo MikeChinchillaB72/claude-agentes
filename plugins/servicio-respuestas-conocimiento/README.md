@@ -3,7 +3,7 @@
 Busca en la base de conocimiento los artículos que responden a la pregunta de un caso y redacta la respuesta citándolos. Si ningún artículo la cubre, lo dice y no inventa la respuesta.
 
 Funciona con **Salesforce Service Cloud** o con **monday service**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.0) **solo lee** el CRM.
+conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
 
 ## Usarlo
 

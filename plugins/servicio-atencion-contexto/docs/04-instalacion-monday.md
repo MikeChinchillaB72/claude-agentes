@@ -1,6 +1,6 @@
 # Instalación en monday.com: Atención con contexto del cliente
 
-> Plugin `servicio-atencion-contexto` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-atencion-contexto` 0.1.1. Actualizado: 2026-11-07.
 
 Los pasos completos están en [instalacion-monday.md](../../../docs/cliente/instalacion-monday.md).
 Aquí va lo que necesita este plugin en monday service.

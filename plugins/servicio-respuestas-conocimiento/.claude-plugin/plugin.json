@@ -1,11 +1,12 @@
 {
   "name": "servicio-respuestas-conocimiento",
   "displayName": "Respuestas con la base de conocimiento",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Busca en la base de conocimiento los artículos que responden a un caso y redacta la respuesta citándolos. Si no hay artículo, lo dice en lugar de inventar. Solo lee: funciona con Service Cloud o monday service.",
   "author": {
     "name": "Miguel Chinchilla Borjas"
   },
+  "license": "LicenseRef-Propietaria-Codexue",
   "repository": "https://github.com/MikeChinchillaB72/claude-agentes",
   "keywords": [
     "servicio",

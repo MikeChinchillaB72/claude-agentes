@@ -1,6 +1,6 @@
 # Levantamiento de requisitos: Calificación de leads
 
-> Plugin `ventas-calificacion-leads` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-calificacion-leads` 0.1.1. Actualizado: 2026-11-07.
 > **Estado: pendiente de la información del cliente.** Lo marcado `PENDIENTE` no se ha
 > inventado: lo tiene que aportar la empresa (P1 en [pendientes](../../../docs/pendientes.md)).
 

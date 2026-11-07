@@ -36,3 +36,20 @@ jobs:
           # privilegio). Un hallazgo hace fallar el job, que es lo que importa.
           GITLEAKS_ENABLE_COMMENTS: "false"
           GITLEAKS_VERSION: "8.30.1" # la misma que .pre-commit-config.yaml
+
+  plugins:
+    runs-on: ubuntu-latest
+    env:
+      # Versión fijada de Claude Code (publicada el 2026-11-06). Se sube a mano,
+      # comprobando antes que `claude plugin validate` sigue pasando en local.
+      CLAUDE_CODE_VERSION: "2.1.319"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
+      # El catálogo y cada plugin por separado: validar el catálogo no revisa
+      # que el nombre de cada plugin.json coincida con su entrada (comprobado el 2026-11-07).
+      - run: claude plugin validate .
+      - run: |
+          for plugin in plugins/*/; do
+            claude plugin validate "$plugin"
+          done

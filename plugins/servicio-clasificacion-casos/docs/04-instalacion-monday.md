@@ -1,6 +1,6 @@
 # Instalación en monday.com: Clasificación y priorización de casos
 
-> Plugin `servicio-clasificacion-casos` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-clasificacion-casos` 0.1.1. Actualizado: 2026-11-07.
 
 Los pasos completos están en [instalacion-monday.md](../../../docs/cliente/instalacion-monday.md).
 Aquí va lo que necesita este plugin en monday service.

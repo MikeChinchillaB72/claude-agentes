@@ -24,6 +24,7 @@ para cambios que obligan a reconfigurar.
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| 0.1.1 | 2026-11-07 | Licencia propietaria de Codexue. Guía de Salesforce corregida tras la primera conexión real: callback solo `https`, nombres exactos de los *scopes* y nueva pantalla de conectores de claude.ai |
 | 0.1.0 | 2026-11-07 | Primera versión: seis plugins de solo lectura, con conectores para Salesforce y monday.com y su documentación. Sin probar en plataforma real |
 
 Una versión 0.x no está lista para producción. Pasa a 1.0.0 cuando la empresa confirme los

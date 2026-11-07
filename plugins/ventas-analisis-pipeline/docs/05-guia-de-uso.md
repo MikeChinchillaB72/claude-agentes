@@ -1,6 +1,6 @@
 # Guía de uso: Análisis del pipeline
 
-> Plugin `ventas-analisis-pipeline` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-analisis-pipeline` 0.1.1. Actualizado: 2026-11-07.
 
 **Para:** gerentes de ventas, dirección comercial y vendedores que revisan su propio pipeline.
 

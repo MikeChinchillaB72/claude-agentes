@@ -1,6 +1,6 @@
 # Instalación en monday.com: Seguimiento de oportunidades
 
-> Plugin `ventas-seguimiento` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-seguimiento` 0.1.1. Actualizado: 2026-11-07.
 
 Los pasos completos están en [instalacion-monday.md](../../../docs/cliente/instalacion-monday.md).
 Aquí va lo que necesita este plugin en monday CRM.

@@ -3,7 +3,7 @@
 Responde preguntas sobre el pipeline en lenguaje natural («¿qué oportunidades de más de 10 000 están en riesgo este trimestre?») y entrega un resumen con la tabla de riesgo por cuenta y acciones sugeridas.
 
 Funciona con **Salesforce Sales Cloud** o con **monday CRM**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.0) **solo lee** el CRM.
+conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
 
 ## Usarlo
 

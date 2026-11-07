@@ -1,6 +1,6 @@
 # Seguridad y datos: Atención con contexto del cliente
 
-> Plugin `servicio-atencion-contexto` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-atencion-contexto` 0.1.1. Actualizado: 2026-11-07.
 
 El modelo común está en [seguridad.md](../../../docs/cliente/seguridad.md). Aquí va lo propio de este plugin.
 
