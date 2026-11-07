@@ -45,9 +45,9 @@ aplicarlo en el CRM.
 
 | Acción | Salesforce (herramienta del servidor `AgentesCRM`) | monday CRM |
 |---|---|---|
-| `actualizar_proximo_paso` | «Actualizar próximo paso de una oportunidad» | `change_item_column_values` en la columna de próximo paso del mapeo |
-| `crear_tarea` | «Crear tarea de seguimiento en una oportunidad» | `create_item` en el tablero de tareas del mapeo; si no hay tablero, `create_update` en el negocio |
-| `mover_fecha_cierre` | «Mover fecha de cierre de una oportunidad» | `change_item_column_values` en la columna de fecha de cierre del mapeo |
+| `actualizar_proximo_paso` | `AgentesActualizarProximoPaso` («Actualizar próximo paso de una oportunidad») | `change_item_column_values` en la columna de próximo paso del mapeo |
+| `crear_tarea` | `AgentesCrearTareaSeguimiento` («Crear tarea de seguimiento en una oportunidad») | `create_item` en el tablero de tareas del mapeo; si no hay tablero, `create_update` en el negocio |
+| `mover_fecha_cierre` | `AgentesMoverFechaCierre` («Mover fecha de cierre de una oportunidad») | `change_item_column_values` en la columna de fecha de cierre del mapeo |
 
 Siempre en este orden:
 

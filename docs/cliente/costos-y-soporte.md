@@ -24,7 +24,7 @@ para cambios que obligan a reconfigurar.
 
 | Versión | Fecha | Cambios |
 |---|---|---|
-| 0.2.0 | 2026-11-07 | Solo `ventas-seguimiento`: con confirmación del usuario, actualiza el próximo paso, crea la tarea de seguimiento y mueve la fecha de cierre. **Obliga a reconfigurar** el conector de Salesforce (servidor `AgentesCRM`) o los *scopes* de monday.com. Sin probar en plataforma real |
+| 0.2.0 | 2026-11-07 | Solo `ventas-seguimiento`: con confirmación del usuario, actualiza el próximo paso, crea la tarea de seguimiento y mueve la fecha de cierre. **Obliga a reconfigurar** el conector de Salesforce (servidor `AgentesCRM`) o los *scopes* de monday.com. Probada en una Developer Edition de Salesforce el 2026-11-07; en monday.com, sin probar |
 | 0.1.1 | 2026-11-07 | Licencia propietaria de Codexue. Guía de Salesforce corregida tras la primera conexión real: callback solo `https`, nombres exactos de los *scopes* y nueva pantalla de conectores de claude.ai |
 | 0.1.0 | 2026-11-07 | Primera versión: seis plugins de solo lectura, con conectores para Salesforce y monday.com y su documentación. Sin probar en plataforma real |
 

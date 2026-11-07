@@ -18,10 +18,25 @@
   `servicio-respuestas-conocimiento` (adjuntar artículos y guardar la respuesta como comentario interno).
   Al hacerlo, conviene que todos usen el servidor `AgentesCRM`, para que la organización tenga un solo
   conector de Salesforce.
+- **P14 · URL del servidor `AgentesCRM` en el `.mcp.json`.** El plugin trae
+  `https://api.salesforce.com/platform/mcp/v1/custom/AgentesCRM`, pero un servidor personalizado lleva el
+  dominio de la org (`.../v1/d/<dominio>/<tipo>/custom/AgentesCRM`, comprobado el 2026-11-07), así que cada
+  empresa tiene la suya. Mientras tanto, las guías piden añadir un conector personalizado con la URL de
+  Setup y dejar sin conectar el conector `salesforce` del plugin. Falta que Miguel decida qué hacer con el
+  `.mcp.json` (Claude se lo propone).
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 
 ## Esperan a la empresa cliente
+
+- **P13 · ¿Plugins de Claude o Agentforce?** Cada usuario de un plugin necesita un asiento de Claude
+  (Team o Enterprise). Si los vendedores y agentes de la empresa no van a tener Claude, o se quiere atender
+  a clientes finales, el camino es un agente de Agentforce con Claude como modelo: usa las mismas clases
+  Apex, y la skill se reescribe como instrucciones del *topic*. Además, Salesforce tiene su propio plugin,
+  «Salesforce in Claude», con 37 skills de ventas, que estaba en piloto con beta abierta prevista para
+  septiembre de 2026 ([Claudeforce](https://www.salesforce.com/claudeforce/), consultado el 2026-11-07) y
+  puede solaparse con los plugins de ventas. Miguel pidió el 2026-11-07 pasar a la versión dentro de
+  Salesforce después de actualizar los documentos.
 
 - **P9 · Costos de las plataformas.** Confirmar con Salesforce el cobro por Flex Credits de los
   servidores MCP y qué ediciones los incluyen, y con monday.com en qué planes está su servidor MCP
@@ -30,12 +45,11 @@
 ## Huecos medidos
 
 - **P10 · Acciones de Salesforce sin desplegar.** Las clases de [salesforce/](../salesforce/README.md)
-  pasan un analizador de sintaxis de Apex (`prettier-plugin-apex`), pero no se han compilado ni probado
-  en una org: este entorno no tiene acceso a una. El 2026-11-07 Miguel creó las cuatro clases en su
-  Developer Edition. Ese día también creó las pruebas y pasaron las 37 (P13 de `ventas-seguimiento`).
-  Falta: crear el servidor `AgentesCRM`, comprobar su URL (también en sandbox), el nombre con que
-  publica cada herramienta, cómo las agrupa claude.ai en *Tool permissions*, y pasar las pruebas
-  P6 a P13 de `ventas-seguimiento`. En monday.com, comprobar que una app con `boards:write` y las
+  están probadas en la Developer Edition de Miguel (2026-11-07): compilan, pasan las 37 pruebas de Apex,
+  el servidor `AgentesCRM` publica cada acción con el nombre de su clase, claude.ai las agrupa como
+  *Write/delete tools*, y pasan las pruebas P6 a P9 y P13 de `ventas-seguimiento`. Falta: la URL en un
+  sandbox, las pruebas P10 a P12 (P11 no se completó: en un cambio no apareció la ventana de aprobación y
+  no se investigó) y quitar del Permission Set de la Developer Edition las seis clases que no son acciones. En monday.com, comprobar que una app con `boards:write` y las
   herramientas sobrantes en *Never* no puede hacer más que las tres acciones.
 - **P3 · Dependencias sin fijar.** ESTANDARES.md (sección 2, regla 10) pide versiones fijadas
   y `pyproject.toml` usa rangos (`>=`). Falta un archivo de bloqueo. Venía de antes del 2026-11-06.

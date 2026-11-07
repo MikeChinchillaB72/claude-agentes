@@ -76,24 +76,44 @@ pestaña **Tests** y en **Overall Code Coverage**.
 En **Setup > MCP Servers > Salesforce Servers > Create Salesforce MCP Server**
 ([taller de Salesforce](https://developer.salesforce.com/workshops/headless-360-workshop/explore-salesforce-hosted-mcps/3-create-and-test-custom-server)):
 
-1. **Label** `Agentes CRM`, **Name** `AgentesCRM`. El nombre tiene que ser exactamente ese, porque
-   forma la URL que traen los plugins.
+1. **Label** `Agentes CRM`, **Name** `AgentesCRM`. El nombre forma parte de la URL del servidor.
 2. **Add Server Assets > Add Tools**, tipo **Apex actions**: añadir las acciones que la empresa
    habilite (`acciones_habilitadas` en el `criterios.md` del plugin). Lo que no se añade aquí, Claude no lo puede hacer.
 3. **Add Server Assets > Add from Server > sobject-reads**: añadir las seis herramientas de lectura.
-4. **Activate**, y copiar la **Server URL**. En producción y Developer Edition debe ser
-   `https://api.salesforce.com/platform/mcp/v1/custom/AgentesCRM`.
+4. **Activate**, y copiar la **Server URL** tal como la muestra Setup. Un servidor personalizado lleva
+   el dominio de la org: `https://api.salesforce.com/platform/mcp/v1/d/<dominio>/<tipo>/custom/AgentesCRM`. En la Developer Edition
+   de prueba fue `https://api.salesforce.com/platform/mcp/v1/d/orgfarm-812b871b57-dev-ed/develop/custom/AgentesCRM`
+   (2026-11-07). Los servidores estándar, como `sobject-reads`, sí usan una URL general sin dominio.
 5. Asignar el Permission Set **Agentes CRM - Acciones** (`Agentes_CRM_Acciones`) a los usuarios
    del plugin. Solo da acceso a las clases; lo que pueden editar lo deciden sus otros permisos.
 
 La guía completa para el cliente está en [instalacion-salesforce.md](../docs/cliente/instalacion-salesforce.md).
 
+## Las descripciones son instrucciones para Claude
+
+Claude no ve el código Apex. Para elegir una acción y llenar sus datos solo ve lo que el servidor
+publica de cada clase:
+
+| Lo que ve Claude | De dónde sale |
+|---|---|
+| Nombre de la herramienta | El nombre de la clase (`AgentesMoverFechaCierre`) |
+| Descripción de la herramienta | `description` de `@InvocableMethod` |
+| Datos de entrada y su formato | Cada `@InvocableVariable` de `Solicitud`: tipo, `label`, `description` y `required` |
+| Lo que devuelve | Cada `@InvocableVariable` de `Resultado` |
+
+Por eso esos textos se escriben como instrucciones: qué hace la acción (con el nombre del campo en la
+API y en palabras del usuario), qué no hace y cuándo usarla. Si dos acciones se parecen, sus
+descripciones deben distinguirlas. **Cambiar una descripción cambia cómo se comporta Claude**, así que
+todo cambio se vuelve a probar con las pruebas de aceptación del plugin, no solo con las de Apex.
+
+## Comprobado en la Developer Edition (2026-11-07)
+
+- Las clases compilan y las 37 pruebas de Apex pasan.
+- El servidor publica cada acción con el nombre de su clase, y claude.ai la agrupa en *Tool permissions*
+  como **Write/delete tools**, aparte de las seis de lectura.
+- Las acciones funcionan desde claude.ai (pruebas P6 a P9 de `ventas-seguimiento`).
+
 ## Sin comprobar
 
-- Que las clases compilen y las pruebas pasen en una org (P10).
-- La URL del servidor personalizado en un sandbox: siguiendo el patrón de los servidores estándar
-  sería `https://api.salesforce.com/platform/mcp/v1/sandbox/custom/AgentesCRM`. Hay que copiarla de Setup.
-- El nombre exacto con que el servidor publica cada herramienta. Las skills nombran las acciones
-  por su etiqueta, no por ese nombre.
-- Si el servidor marca las herramientas como de lectura o de escritura para que claude.ai las agrupe
-  en *Tool permissions*. Por eso la guía pide poner cada acción en **Needs approval** a mano.
+- La URL del servidor en un sandbox y en producción. Se copia de Setup.
+- Qué ediciones incluyen los servidores personalizados y si cobran por llamada (P9).

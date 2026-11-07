@@ -14,7 +14,7 @@ Aquí va lo que necesita este plugin.
    *scopes* `mcp_api` y `refresh_token`; JWT) y copiar su Consumer Key.
 3. Dar a los usuarios del plugin un Permission Set con los permisos de abajo y el Permission Set
    **Agentes CRM - Acciones**.
-4. Añadir el conector `salesforce` en Claude con la URL y el Consumer Key, y poner las tres acciones en
+4. Añadir el conector en Claude con la URL que muestra Setup y el Consumer Key, y poner las tres acciones en
    **Needs approval** en *Tool permissions*
    ([instalar-en-claude.md](../../../docs/cliente/instalar-en-claude.md)).
 
@@ -22,8 +22,13 @@ Aquí va lo que necesita este plugin.
 
 | Org | URL |
 |---|---|
-| Producción y Developer Edition (la que trae el plugin) | `https://api.salesforce.com/platform/mcp/v1/custom/AgentesCRM` |
-| Sandbox | Copiarla de **Setup > MCP Servers** al activar el servidor (sin comprobar: sería `.../v1/sandbox/custom/AgentesCRM`) |
+| Cualquiera | Copiarla de **Setup > MCP Servers** al activar el servidor. Lleva el dominio de la org: `https://api.salesforce.com/platform/mcp/v1/d/<dominio>/<tipo>/custom/AgentesCRM` |
+| Developer Edition de prueba (2026-11-07) | `https://api.salesforce.com/platform/mcp/v1/d/orgfarm-812b871b57-dev-ed/develop/custom/AgentesCRM` |
+
+La URL del `.mcp.json` del plugin (`.../v1/custom/AgentesCRM`, sin dominio) no sirve para un servidor
+personalizado (P14 en [pendientes.md](../../../docs/pendientes.md)). Mientras se decide, el conector se
+añade en Claude como conector personalizado con la URL de Setup, y el conector `salesforce` de la
+pestaña **Connectors** del plugin se deja sin conectar.
 
 ## Permisos que necesita
 

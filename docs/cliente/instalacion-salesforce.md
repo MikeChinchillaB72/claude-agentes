@@ -32,6 +32,9 @@ No hay que mantener un servidor propio. Hay dos:
 Los plugins traen la URL de producción en su `.mcp.json`. Para probar en un sandbox, el
 conector de la organización se añade con la URL de sandbox (paso 4).
 
+El servidor personalizado `AgentesCRM` no usa esta tabla: su URL lleva el dominio de la org y se copia
+de Setup (ver [Acciones](#acciones-servidor-personalizado-agentescrm)).
+
 ## 1. Activar el servidor MCP
 
 1. En **Setup**, buscar en Quick Find **MCP Servers** (está en el API Catalog).
@@ -80,7 +83,7 @@ individual, en **Customize > Connectors > + > Add custom connector**. La pantall
 | Campo | Valor |
 |---|---|
 | Nombre | `Salesforce` |
-| MCP Server URL | La del servidor (producción o sandbox, tabla de arriba). Una Developer Edition usa la de producción |
+| MCP Server URL | `sobject-reads`: la de la tabla de arriba (una Developer Edition usa la de producción). `AgentesCRM`: la que muestra Setup, con el dominio de la org |
 | Authentication | **Sign in now**: cada usuario inicia sesión en Salesforce antes de usar nada |
 | OAuth client | **Use your own OAuth client**, con el Consumer Key del paso 2 como Client ID y el secreto vacío. No usar *Register automatically*, que registraría clientes nuevos en la org |
 | Request headers | Ninguno |
@@ -110,15 +113,17 @@ cualquier campo.
 1. **Desplegar las acciones** de [salesforce/](../../salesforce/README.md) con Salesforce CLI. Las
    pruebas de Apex tienen que pasar.
 2. En **Setup > MCP Servers > Salesforce Servers > Create Salesforce MCP Server**: **Label**
-   `Agentes CRM` y **Name** `AgentesCRM`, exactamente así, porque forma la URL que trae el plugin.
+   `Agentes CRM` y **Name** `AgentesCRM`. El nombre forma parte de la URL.
 3. **Add Server Assets > Add Tools**, tipo **Apex actions**: añadir solo las acciones que la empresa
    habilite (`acciones_habilitadas` en el `criterios.md` del plugin):
    - Actualizar próximo paso de una oportunidad (`AgentesActualizarProximoPaso`)
    - Crear tarea de seguimiento en una oportunidad (`AgentesCrearTareaSeguimiento`)
    - Mover fecha de cierre de una oportunidad (`AgentesMoverFechaCierre`)
 4. **Add Server Assets > Add from Server > sobject-reads**: añadir sus seis herramientas de lectura.
-5. **Activate** y copiar la **Server URL**: `https://api.salesforce.com/platform/mcp/v1/custom/AgentesCRM`
-   en producción y Developer Edition. En un sandbox, la que muestre Setup.
+5. **Activate** y copiar la **Server URL** tal como la muestra Setup. Lleva el dominio de la org:
+   `https://api.salesforce.com/platform/mcp/v1/d/<dominio>/<tipo>/custom/AgentesCRM` (por ejemplo `.../d/miempresa/develop/custom/AgentesCRM`
+   en una Developer Edition, comprobado el 2026-11-07). La URL general sin dominio, que sí sirve para
+   `sobject-reads`, no sirve para un servidor personalizado.
 6. Asignar a los usuarios el Permission Set **Agentes CRM - Acciones** y los permisos de edición
    que lista el `docs/03-instalacion-salesforce.md` del plugin.
 7. En Claude, el conector de este plugin usa esa URL (paso 4 de esta guía) y, en **Tool permissions**,

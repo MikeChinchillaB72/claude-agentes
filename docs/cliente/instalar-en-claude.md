@@ -52,7 +52,11 @@ Cada plugin trae los dos conectores. **Se añade solo el de la plataforma que us
 El otro se queda sin conectar y no hace nada.
 
 `ventas-seguimiento` 0.2.0 usa en Salesforce otra URL (el servidor `AgentesCRM`), así que es un
-conector aparte de los demás plugins.
+conector aparte de los demás plugins. Esa URL es propia de cada org y se copia de Setup al activar el
+servidor; no es la que trae el `.mcp.json` del plugin
+([instalacion-salesforce.md](instalacion-salesforce.md#acciones-servidor-personalizado-agentescrm)).
+Por eso el conector se añade como conector personalizado con esa URL, y el conector `salesforce` de
+la pestaña **Connectors** del plugin se deja sin conectar.
 
 **Herramientas que escriben:** en la página del conector, **Tool permissions** deja elegir para cada
 herramienta *Always allow*, *Needs approval* o *Never*, y lo que fija el Owner vale para toda la
