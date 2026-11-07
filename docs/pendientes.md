@@ -43,8 +43,8 @@
   en `docs/06-pruebas-de-aceptacion.md`, que son manuales.
 - **P5 · Pruebas en plataforma real a medias** (regla T5). El 2026-11-07 se conectó el servidor
   `sobject-reads` de una Developer Edition de Salesforce con claude.ai. Faltan:
-  - las pruebas de aceptación de cada plugin, empezando por `ventas-seguimiento` con los datos
-    `PRUEBA-` de la Developer Edition;
+  - las pruebas de aceptación de cada plugin. De `ventas-seguimiento` ya pasan P1 y P5
+    (2026-11-07, versión 0.1.1, datos `PRUEBA-` de la Developer Edition);
   - una cuenta de prueba de monday.com y sus pruebas;
   - la autenticación de Salesforce desde Claude Code: necesita un callback `http://localhost`
     y la External Client App rechaza direcciones `http://`;
