@@ -2,7 +2,7 @@
 
 > La puerta de entrada (regla T8). No repite lo que dicen los demás documentos:
 > dice cuál abrir y cuál manda cuando dos no coinciden.
-> Actualizado: 2026-11-06.
+> Actualizado: 2026-11-07.
 
 ## Según lo que vengas a hacer
 
@@ -11,6 +11,8 @@
 | Saber **cómo se trabaja** aquí | [REGLAS.md](REGLAS.md) ← empieza por aquí |
 | Crear o cambiar un **agente** | [ESTANDARES.md](ESTANDARES.md) y [lista-revision-agente.md](lista-revision-agente.md) |
 | Cambiar un **valor** (modelo, límites, instrucciones, herramientas) | [CONFIGURACION.md](CONFIGURACION.md) |
+| **Instalar o usar los plugins** en una empresa (Salesforce o monday.com) | [cliente/README.md](cliente/README.md), la guía del cliente |
+| Cambiar un **plugin** | Su carpeta en `plugins/` (README y `docs/`) y la sección Plugins de [CONFIGURACION.md](CONFIGURACION.md#plugins-pluginsnombre) |
 | Saber **qué falta** | [pendientes.md](pendientes.md) · lo cerrado, en [hecho.md](hecho.md) |
 | Saber **qué se hizo un día** y con qué fuentes | `cambios_AAAA-MM-DD.md`, una por jornada |
 
@@ -25,6 +27,8 @@
 | Qué revisan las redes y sus excepciones | `config/redes.toml` | |
 | Las invariantes de seguridad | `agentes/comun.py` | |
 | Las reglas de trabajo | [REGLAS.md](REGLAS.md) | |
+| Qué hace cada plugin | Su `skills/<skill>/SKILL.md` y sus criterios en `references/criterios.md` | Los documentos de `plugins/<nombre>/docs/` y de `cliente/` |
+| Pasos de instalación en Salesforce, monday.com y Claude | La documentación oficial de cada proveedor (enlazada en cada guía) | Las guías de `cliente/`, que la resumen con fecha |
 
 ## Lo que no se reescribe
 

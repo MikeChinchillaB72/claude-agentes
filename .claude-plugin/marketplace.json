@@ -1,0 +1,48 @@
+{
+  "name": "agentes-crm",
+  "owner": {
+    "name": "Miguel Chinchilla Borjas"
+  },
+  "metadata": {
+    "description": "Plugins de ventas y servicio para Claude que funcionan con Salesforce o monday.com.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ventas-seguimiento",
+      "source": "./plugins/ventas-seguimiento",
+      "description": "Encuentra las oportunidades abiertas sin actividad reciente, lee su historial y redacta el correo de seguimiento y el próximo paso para que el vendedor los revise. Solo lee: funciona con Sales Cloud o monday CRM.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "ventas-calificacion-leads",
+      "source": "./plugins/ventas-calificacion-leads",
+      "description": "Puntúa un lead de 0 a 100 con la rúbrica de la empresa, busca si ya existe como cuenta o contacto y propone si convertirlo y a qué vendedor asignarlo. Solo lee: funciona con Sales Cloud o monday CRM.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "ventas-analisis-pipeline",
+      "source": "./plugins/ventas-analisis-pipeline",
+      "description": "Responde en lenguaje natural preguntas sobre el pipeline de ventas y señala las oportunidades en riesgo, con el motivo y una acción sugerida. Solo lee: funciona con Sales Cloud o monday CRM.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "servicio-atencion-contexto",
+      "source": "./plugins/servicio-atencion-contexto",
+      "description": "Reúne la cuenta, los contactos y los casos del cliente antes de responder, resume su situación y propone la respuesta y si conviene escalar. Solo lee: funciona con Service Cloud o monday service.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "servicio-clasificacion-casos",
+      "source": "./plugins/servicio-clasificacion-casos",
+      "description": "Revisa los casos sin clasificar y propone para cada uno categoría, prioridad y un resumen, con el motivo, para que el agente o el supervisor los aplique. Solo lee: funciona con Service Cloud o monday service.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "servicio-respuestas-conocimiento",
+      "source": "./plugins/servicio-respuestas-conocimiento",
+      "description": "Busca en la base de conocimiento los artículos que responden a un caso y redacta la respuesta citándolos. Si no hay artículo, lo dice en lugar de inventar. Solo lee: funciona con Service Cloud o monday service.",
+      "version": "0.1.0"
+    }
+  ]
+}
