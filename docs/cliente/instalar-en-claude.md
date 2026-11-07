@@ -51,6 +51,15 @@ Los datos que pide cada uno están en el documento de su plataforma:
 Cada plugin trae los dos conectores. **Se añade solo el de la plataforma que usa la empresa.**
 El otro se queda sin conectar y no hace nada.
 
+`ventas-seguimiento` 0.2.0 usa en Salesforce otra URL (el servidor `AgentesCRM`), así que es un
+conector aparte de los demás plugins.
+
+**Herramientas que escriben:** en la página del conector, **Tool permissions** deja elegir para cada
+herramienta *Always allow*, *Needs approval* o *Never*, y lo que fija el Owner vale para toda la
+organización ([Claude Help Center](https://support.claude.com/en/articles/11176164), consultado el
+2026-11-07). Toda herramienta que escribe va en **Needs approval**, y en monday.com las que el plugin
+no usa van en **Never**. Así cada cambio pide el sí del usuario aunque las instrucciones fallen.
+
 ## 3. Cada usuario conecta su cuenta
 
 1. Abrir **Customize > Plugins**, elegir el plugin e instalarlo (si no venía instalado).

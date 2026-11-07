@@ -29,6 +29,7 @@ Requisitos: Python 3.11 o superior y una clave de API de https://console.anthrop
 | `ejemplos/02_herramienta_propia.py` | Agente con una herramienta escrita en Python |
 | `ejemplos/03_subagentes.py` | Agente coordinador que delega en subagentes |
 | `plugins/` | Seis plugins de Claude de ventas y servicio que funcionan con Salesforce o monday.com, cada uno con sus 7 documentos |
+| `salesforce/` | Acciones Apex que los plugins ejecutan en Salesforce por el servidor MCP personalizado `AgentesCRM` ([salesforce/README.md](salesforce/README.md)) |
 | `.claude-plugin/marketplace.json` | Catálogo `agentes-crm` con los seis plugins |
 | `tests/` | Pruebas de herramientas y políticas sin llamar a la API |
 | `docs/` | Reglas, estándares, configuración, pendientes y bitácora. Empieza por [docs/README.md](docs/README.md) |

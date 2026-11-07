@@ -80,8 +80,8 @@ dentro de ella, en archivos que se cambian sin tocar las instrucciones:
 
 | Archivo | Qué se configura |
 |---|---|
-| `.mcp.json` | La URL de cada conector: `salesforce` (servidor SObject Reads de producción) y `monday`. Para un sandbox de Salesforce se cambia la URL en el conector de la organización (ver [cliente/instalacion-salesforce.md](cliente/instalacion-salesforce.md)) |
-| `skills/<skill>/references/criterios.md` | Los criterios de negocio de la empresa (umbrales, rúbricas, categorías) y el mapeo de tableros y columnas de monday.com |
+| `.mcp.json` | La URL de cada conector: `salesforce` (servidor SObject Reads de producción; en `ventas-seguimiento`, el servidor personalizado `AgentesCRM`) y `monday`. Para un sandbox de Salesforce se cambia la URL en el conector de la organización (ver [cliente/instalacion-salesforce.md](cliente/instalacion-salesforce.md)) |
+| `skills/<skill>/references/criterios.md` | Los criterios de negocio de la empresa (umbrales, rúbricas, categorías), las acciones habilitadas (`acciones_habilitadas`, solo en `ventas-seguimiento`) y el mapeo de tableros y columnas de monday.com |
 | `.claude-plugin/plugin.json` | Nombre, versión y descripción |
 | [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) (raíz) | El catálogo `agentes-crm` con los seis plugins |
 

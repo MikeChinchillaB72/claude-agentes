@@ -13,6 +13,7 @@
 | Cambiar un **valor** (modelo, límites, instrucciones, herramientas) | [CONFIGURACION.md](CONFIGURACION.md) |
 | **Instalar o usar los plugins** en una empresa (Salesforce o monday.com) | [cliente/README.md](cliente/README.md), la guía del cliente |
 | Cambiar un **plugin** | Su carpeta en `plugins/` (README y `docs/`) y la sección Plugins de [CONFIGURACION.md](CONFIGURACION.md#plugins-pluginsnombre) |
+| Cambiar una **acción de Salesforce** que ejecuta un plugin | [salesforce/README.md](../salesforce/README.md) |
 | Saber **qué falta** | [pendientes.md](pendientes.md) · lo cerrado, en [hecho.md](hecho.md) |
 | Saber **qué se hizo un día** y con qué fuentes | `cambios_AAAA-MM-DD.md`, una por jornada |
 
@@ -28,6 +29,7 @@
 | Las invariantes de seguridad | `agentes/comun.py` | |
 | Las reglas de trabajo | [REGLAS.md](REGLAS.md) | |
 | Qué hace cada plugin | Su `skills/<skill>/SKILL.md` y sus criterios en `references/criterios.md` | Los documentos de `plugins/<nombre>/docs/` y de `cliente/` |
+| Qué puede escribir un plugin en Salesforce y con qué validaciones | Las clases Apex de `salesforce/` | La skill, que solo las nombra |
 | Pasos de instalación en Salesforce, monday.com y Claude | La documentación oficial de cada proveedor (enlazada en cada guía) | Las guías de `cliente/`, que la resumen con fecha |
 
 ## Lo que no se reescribe

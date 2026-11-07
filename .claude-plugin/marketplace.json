@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Plugins de ventas y servicio para Claude que funcionan con Salesforce o monday.com.",
-    "version": "0.1.1"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "ventas-seguimiento",
       "source": "./plugins/ventas-seguimiento",
-      "description": "Encuentra las oportunidades abiertas sin actividad reciente, lee su historial y redacta el correo de seguimiento y el próximo paso para que el vendedor los revise. Solo lee: funciona con Sales Cloud o monday CRM.",
-      "version": "0.1.1"
+      "description": "Encuentra las oportunidades abiertas sin actividad reciente, lee su historial y redacta el correo de seguimiento y el próximo paso. Con confirmación del vendedor, actualiza el próximo paso, crea la tarea de seguimiento o mueve la fecha de cierre. Funciona con Sales Cloud o monday CRM.",
+      "version": "0.2.0"
     },
     {
       "name": "ventas-calificacion-leads",

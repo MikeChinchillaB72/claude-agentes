@@ -1,9 +1,10 @@
 # Seguimiento de oportunidades
 
-Encuentra las oportunidades abiertas que llevan días sin actividad, lee el historial reciente de cada una y redacta un correo de seguimiento y un próximo paso. El vendedor revisa el borrador y lo envía él mismo.
+Encuentra las oportunidades abiertas que llevan días sin actividad, lee el historial reciente de cada una y redacta un correo de seguimiento y un próximo paso. Si el vendedor lo confirma, actualiza el próximo paso, crea una tarea de seguimiento o mueve la fecha de cierre vencida. El correo lo envía el vendedor él mismo.
 
 Funciona con **Salesforce Sales Cloud** o con **monday CRM**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
+conecta el que usa. Desde la versión 0.2.0 **escribe en el CRM**, pero solo esas tres acciones y
+siempre con la confirmación del vendedor. Nunca borra ni envía correos.
 
 ## Usarlo
 
@@ -13,6 +14,7 @@ por ejemplo:
 - «¿Qué oportunidades mías llevan más de una semana sin actividad?»
 - «Prepárame los seguimientos de hoy.»
 - «Redacta el seguimiento para la oportunidad de Acme y propón el próximo paso.»
+- «Aplica los próximos pasos y crea las tareas.» (después de revisar la propuesta)
 
 En Claude Code se instala con:
 
@@ -27,7 +29,8 @@ En claude.ai y Cowork, lo añade el Owner de la organización o cada usuario: ve
 
 El plugin lee del CRM, con la cuenta de cada usuario, los registros que necesita la tarea
 (ver [docs/02-seguridad-y-datos.md](docs/02-seguridad-y-datos.md)). Esos registros pasan a la
-conversación con Claude. El plugin no guarda nada ni tiene servidor propio, y no escribe en el CRM.
+conversación con Claude. El plugin no guarda nada ni tiene servidor propio. Escribe en el CRM solo
+las tres acciones confirmadas, con los permisos del usuario.
 
 ## Documentos
 
@@ -46,7 +49,7 @@ Guía general para el cliente: [docs/cliente](../../docs/cliente/README.md).
 | Ruta | Qué es |
 |---|---|
 | `.claude-plugin/plugin.json` | Manifiesto: nombre, versión y descripción |
-| `.mcp.json` | Conectores `salesforce` (servidor SObject Reads) y `monday` |
+| `.mcp.json` | Conectores `salesforce` (servidor personalizado `AgentesCRM`, ver [salesforce/](../../salesforce/README.md)) y `monday` |
 | `skills/seguimiento-oportunidades/SKILL.md` | Instrucciones de la tarea |
 | `skills/seguimiento-oportunidades/references/criterios.md` | Criterios de negocio de la empresa: **se ajustan aquí** |
 | `docs/` | Documentación para el cliente |
