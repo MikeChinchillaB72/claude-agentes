@@ -1,0 +1,12 @@
+{
+  "name": "agentes-crm-salesforce",
+  "namespace": "",
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "68.0"
+}

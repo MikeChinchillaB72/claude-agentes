@@ -17,9 +17,14 @@ No hay que instalar nada ni mantener un servidor propio.
 - El servidor tiene herramientas que leen (`get_board_items_by_name`, `get_board_schema`,
   `list_users_and_teams`...) y herramientas que escriben (`create_item`,
   `change_item_column_values`, `create_update`, `delete_item`...).
-- El servidor alojado **no documenta un modo de solo lectura**. La forma de garantizar que los
-  plugins solo lean es una **app OAuth propia con permisos de solo lectura**: el token
-  «no puede pasar ninguno de los dos límites», ni los permisos del usuario ni los *scopes* de la app.
+- El servidor alojado **no documenta un modo de solo lectura**. La forma de limitar lo que pueden
+  hacer los plugins es una **app OAuth propia**: el token «no puede pasar ninguno de los dos
+  límites», ni los permisos del usuario ni los *scopes* de la app.
+- **Excepción, `ventas-seguimiento` 0.2.0:** escribe el próximo paso, la fecha de cierre y tareas,
+  así que necesita `boards:write` y `updates:write`. Esos *scopes* permiten más que eso, porque no
+  distinguen tableros ni columnas, y la herramienta `all_monday_api` puede ejecutar cualquier cambio
+  ([Platform MCP tools](https://developer.monday.com/api-reference/docs/platform-mcp-tools)). Por eso,
+  con ese plugin, el bloqueo de herramientas en Claude es obligatorio (paso 4).
 
 ## Elegir cómo conectar
 
@@ -43,7 +48,9 @@ herramienta. Por eso no se recomienda con datos reales.
    - `workspaces:read`, `boards:read`, `updates:read`
    - `docs:read` (solo para `servicio-respuestas-conocimiento`, si la base de conocimiento está en docs de monday)
 
-   **Ningún `:write`.** Cada plugin dice cuáles usa en su `docs/04-instalacion-monday.md`.
+   **Ningún `:write`**, salvo que la empresa use `ventas-seguimiento` 0.2.0: entonces también
+   `boards:write` y `updates:write`, y el bloqueo de herramientas del paso 4 es obligatorio. Cada
+   plugin dice cuáles usa en su `docs/04-instalacion-monday.md`.
 4. En la pestaña **Redirect URLs**, añadir `https://claude.ai/api/mcp/auth_callback` y **Save**.
 5. En **General Settings > App Credentials**, copiar el **Client ID** y el **Client Secret**.
    El Client Secret es una credencial: se pega solo en la configuración del conector en Claude,
@@ -75,6 +82,16 @@ Así se llamaban las opciones en la pantalla de Salesforce el 2026-11-07; con mo
 Un usuario individual lo hace en **Customize > Connectors > + > Add custom connector** con los
 mismos datos. Luego cada usuario conecta su cuenta desde la pestaña **Connectors** del plugin
 ([instalar-en-claude.md](instalar-en-claude.md#3-cada-usuario-conecta-su-cuenta)).
+
+**Si la app tiene *scopes* de escritura** (`ventas-seguimiento` 0.2.0), en **Tool permissions** del
+conector:
+
+- `change_item_column_values`, `create_item` y `create_update`: **Needs approval**.
+- Todas las demás herramientas que escriben, en especial `all_monday_api` (ejecuta
+  cualquier cambio), `create_board` y las de automatizaciones, flujos y agentes: **Never**.
+- Las de lectura, como se prefiera (para las pruebas conviene *Needs approval*).
+
+Sin este paso, Claude tendría herramientas para hacer cambios que el plugin no prevé.
 
 ## 5. Comprobar
 
