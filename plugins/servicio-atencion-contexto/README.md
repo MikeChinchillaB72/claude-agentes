@@ -3,7 +3,7 @@
 Cuando un agente de soporte atiende a un cliente, reúne su cuenta, contactos, casos abiertos y recientes, resume la situación y propone una respuesta. Señala si conviene escalar a otra persona.
 
 Funciona con **Salesforce Service Cloud** o con **monday service**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.0) **solo lee** el CRM.
+conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
 
 ## Usarlo
 

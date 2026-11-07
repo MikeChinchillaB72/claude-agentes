@@ -1,7 +1,7 @@
 # Guía del cliente: plugins de ventas y servicio
 
 > Para quien va a instalar y usar los plugins en su empresa. Actualizado: 2026-11-07.
-> Versión de los plugins: 0.1.0 (primera versión, **sin probar todavía en una
+> Versión de los plugins: 0.1.1 (primera versión, **sin probar todavía en una
 > plataforma real**; ver [Estado](#estado-de-esta-versión)).
 
 ## Qué son
@@ -61,7 +61,9 @@ necesita, cómo se usa y sus preguntas frecuentes.
 |---|---|
 | Estructura de los plugins y su validación | ✅ Pasa `claude plugin validate` (2026-11-07) |
 | Pasos de instalación | 📄 Según la documentación oficial consultada el 2026-11-06 y el 2026-11-07 |
-| Funcionamiento con Salesforce y monday.com | ⚠️ Sin probar en una plataforma real. Hace falta un sandbox de Salesforce y una cuenta de prueba de monday.com |
+| Conexión con Salesforce | ✅ Comprobada el 2026-11-07 en una Developer Edition con claude.ai (pasos 1 a 4 de [instalacion-salesforce.md](instalacion-salesforce.md)) |
+| Funcionamiento de cada plugin | ⚠️ Sin probar todavía. Las pruebas empiezan por `ventas-seguimiento` en la Developer Edition |
+| Conexión con monday.com | ⚠️ Sin probar. Hace falta una cuenta de prueba de monday.com |
 | Requisitos del cliente | ⚠️ Pendientes. Cada `01-requisitos.md` marca lo que falta |
 
 ## Documentos de esta carpeta

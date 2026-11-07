@@ -3,7 +3,7 @@
 Revisa los casos nuevos o sin clasificar y propone para cada uno su categoría, su prioridad y un resumen de una línea, con el motivo. El supervisor o el agente revisa la propuesta y la aplica en el CRM.
 
 Funciona con **Salesforce Service Cloud** o con **monday service**: trae los dos conectores y la empresa
-conecta el que usa. Esta versión (0.1.0) **solo lee** el CRM.
+conecta el que usa. Esta versión (0.1.1) **solo lee** el CRM.
 
 ## Usarlo
 

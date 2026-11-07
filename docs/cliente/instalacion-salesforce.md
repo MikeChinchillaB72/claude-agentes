@@ -2,7 +2,8 @@
 
 > Para el administrador de Salesforce. Actualizado: 2026-11-07. Pasos según la
 > documentación oficial de Salesforce y de Claude consultada el 2026-11-06 y el
-> 2026-11-07 (fuentes al final). **Sin probar todavía en un sandbox real** (P5 en
+> 2026-11-07 (fuentes al final). **Pasos 1 a 4 comprobados** el 2026-11-07 en una Developer
+> Edition con claude.ai. Las pruebas de cada plugin siguen pendientes (P5 en
 > [pendientes.md](../pendientes.md)).
 
 Sirve para los seis plugins. Lo que cambia de uno a otro son los objetos que el usuario
@@ -42,14 +43,14 @@ En **Setup > External Client App Manager > New External Client App**:
 
 | Campo | Valor |
 |---|---|
-| Callback URL | `https://claude.ai/api/mcp/auth_callback` (claude.ai y Cowork). Para Claude Desktop local, además `http://127.0.0.1:53280/callback` |
-| OAuth Scopes | `mcp_api` y `refresh_token` (solo esos dos) |
-| PKCE | Obligatorio (activado) |
-| Tokens | Emitir tokens de acceso JWT para usuarios nombrados |
+| Basic Information | Nombre (por ejemplo `Claude Plugins CRM`), correo y teléfono de contacto, **Distribution State** `Local` y una descripción de para qué es la app |
+| Callback URL | `https://claude.ai/api/mcp/auth_callback` (claude.ai y Cowork). **Salesforce rechaza direcciones `http://`** («Cannot be an HTTP URL»), así que no sirve el callback local de Claude Desktop |
+| OAuth Scopes | **Access Salesforce hosted MCP servers (mcp_api)** y **Perform requests at any time (refresh_token, offline_access)**. Solo esos dos |
+| Security | Marcar **Issue JSON Web Token (JWT)-based access tokens for named users**. Salesforce ya deja marcados y bloqueados PKCE, la rotación del refresh token y su límite de 30 días. Dejar sin marcar **Require secret for Web Server Flow**, **Require secret for Refresh Token Flow**, **Enforce Refresh Token IP Allowlist** y **DPoP** |
 | Política | Que cada usuario pueda autorizarse a sí mismo, o que solo los usuarios pre-autorizados puedan (ver el paso 3) |
 
-Al guardar, copiar el **Consumer Key**: es el *Client ID* que pide Claude. No hace falta el
-Consumer Secret.
+Al guardar, en **Settings > OAuth Settings > Consumer Key and Secret**, copiar el **Consumer Key**:
+es el *Client ID* que pide Claude. No hace falta el Consumer Secret.
 
 **La app puede tardar hasta 30 minutos en funcionar.** Si antes de eso aparece `invalid_client_id`,
 hay que esperar.
@@ -59,7 +60,7 @@ hay que esperar.
 - **Solo usuarios pre-autorizados:** en la política de la app, permitir solo a los usuarios
   con un Permission Set concreto, y asignarlo al grupo piloto.
 - **Restricción por IP**, si la empresa la usa en el resto de sus apps.
-- **Refresh token de 30 días o menos**, con rotación.
+- **Refresh token de 30 días o menos**, con rotación (en una org nueva, Salesforce ya lo impone).
 - **Single Logout**, para que cerrar sesión en Salesforce corte también a Claude.
 - **Permisos de lectura de cada plugin:** que el Permission Set dé lectura solo a los objetos y
   campos que el plugin necesita (lista en el `docs/03-instalacion-salesforce.md` de cada plugin).
@@ -67,20 +68,34 @@ hay que esperar.
 
 ## 4. Añadir el conector en Claude
 
-Un Owner de la organización en Claude, en **Organization settings > Connectors**, añade el
-conector `salesforce` del plugin con:
+Un Owner de la organización en Claude lo añade en **Organization settings > Connectors**; un usuario
+individual, en **Customize > Connectors > + > Add custom connector**. La pantalla (comprobada el
+2026-11-07) se llena así:
 
-- **URL:** la del servidor (producción o sandbox, tabla de arriba).
-- **OAuth Client ID** (en **Advanced settings**): el Consumer Key del paso 2.
+| Campo | Valor |
+|---|---|
+| Nombre | `Salesforce` |
+| MCP Server URL | La del servidor (producción o sandbox, tabla de arriba). Una Developer Edition usa la de producción |
+| Authentication | **Sign in now**: cada usuario inicia sesión en Salesforce antes de usar nada |
+| OAuth client | **Use your own OAuth client**, con el Consumer Key del paso 2 como Client ID y el secreto vacío. No usar *Register automatically*, que registraría clientes nuevos en la org |
+| Request headers | Ninguno |
+| Advanced > Transport | **Streamable HTTP** |
 
-Un usuario individual lo hace en **Customize > Connectors > + > Add custom connector** con los
-mismos datos. Luego cada usuario conecta su cuenta desde la pestaña **Connectors** del plugin
+Al pulsar **Add**, Claude lleva al inicio de sesión de Salesforce.
+
+### Herramientas que expone
+
+El servidor `sobject-reads` ofrece seis herramientas, todas de lectura (comprobado el 2026-11-07):
+**Search Across Objects (SOSL)**, **Get Object Schema (Enhanced)**, **Get Related Records**,
+**Get Current User Info**, **Get Recently Viewed Records** y **Query Records (SOQL)**. En la página
+del conector, **Tool permissions** deja elegir para cada una *Always allow*, *Needs approval* o
+*Never*. Para las pruebas conviene **Needs approval**, para ver cada consulta. Luego cada usuario conecta su cuenta desde la pestaña **Connectors** del plugin
 ([instalar-en-claude.md](instalar-en-claude.md#3-cada-usuario-conecta-su-cuenta)).
 
 ## 5. Comprobar
 
 Con un usuario del grupo piloto, en un chat nuevo: «¿Con qué usuario de Salesforce estoy
-conectado?». Claude debe responder con el usuario correcto. Después, seguir la lista
+conectado?». Claude debe responder con el usuario correcto (comprobado el 2026-11-07). Después, seguir la lista
 `docs/06-pruebas-de-aceptacion.md` del plugin.
 
 ## Errores frecuentes
@@ -88,6 +103,7 @@ conectado?». Claude debe responder con el usuario correcto. Después, seguir la
 | Error | Causa probable | Qué hacer |
 |---|---|---|
 | `invalid_client_id` | La External Client App aún no se propagó, o el Client ID está mal copiado | Esperar hasta 30 minutos; volver a copiar el Consumer Key |
+| `Cannot be an HTTP URL` al crear la app | Hay una Callback URL con `http://` | Dejar solo `https://claude.ai/api/mcp/auth_callback` |
 | Error de redirección (*redirect_uri*) | Falta la Callback URL exacta | Revisar que esté `https://claude.ai/api/mcp/auth_callback`, sin espacios ni barra final |
 | Error de token o JWT | No está activada la emisión de JWT para usuarios nombrados | Activarla en la app |
 | Claude no ve un campo u objeto | Seguridad a nivel de campo o permisos del objeto | Dar lectura en el Permission Set del usuario |

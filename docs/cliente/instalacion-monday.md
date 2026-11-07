@@ -66,8 +66,11 @@ servicio que necesita cada plugin.
 Un Owner de la organización en Claude, en **Organization settings > Connectors**, añade el
 conector `monday` del plugin con:
 
-- **URL:** `https://mcp.monday.com/mcp`
-- **Client ID** y **Client Secret** (en **Advanced settings**): los del paso 1.
+- **MCP Server URL:** `https://mcp.monday.com/mcp`
+- **Authentication:** **Sign in now**.
+- **OAuth client:** **Use your own OAuth client**, con el Client ID y el Client Secret del paso 1.
+
+Así se llamaban las opciones en la pantalla de Salesforce el 2026-11-07; con monday.com está sin comprobar.
 
 Un usuario individual lo hace en **Customize > Connectors > + > Add custom connector** con los
 mismos datos. Luego cada usuario conecta su cuenta desde la pestaña **Connectors** del plugin

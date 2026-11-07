@@ -1,11 +1,12 @@
 {
   "name": "ventas-seguimiento",
   "displayName": "Seguimiento de oportunidades",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Encuentra las oportunidades abiertas sin actividad reciente, lee su historial y redacta el correo de seguimiento y el próximo paso para que el vendedor los revise. Solo lee: funciona con Sales Cloud o monday CRM.",
   "author": {
     "name": "Miguel Chinchilla Borjas"
   },
+  "license": "LicenseRef-Propietaria-Codexue",
   "repository": "https://github.com/MikeChinchillaB72/claude-agentes",
   "keywords": [
     "ventas",

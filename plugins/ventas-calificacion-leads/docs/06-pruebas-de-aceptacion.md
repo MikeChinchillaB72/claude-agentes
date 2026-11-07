@@ -1,6 +1,6 @@
 # Pruebas de aceptación: Calificación de leads
 
-> Plugin `ventas-calificacion-leads` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-calificacion-leads` 0.1.1. Actualizado: 2026-11-07.
 
 Se hacen en un **sandbox de Salesforce** o una **cuenta de prueba de monday.com**, nunca con
 datos reales de producción (regla T5). Los resultados esperados se calculan **aparte**, a mano o

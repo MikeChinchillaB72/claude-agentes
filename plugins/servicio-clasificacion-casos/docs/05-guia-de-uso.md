@@ -1,6 +1,6 @@
 # Guía de uso: Clasificación y priorización de casos
 
-> Plugin `servicio-clasificacion-casos` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-clasificacion-casos` 0.1.1. Actualizado: 2026-11-07.
 
 **Para:** supervisores de soporte y agentes que reparten o atienden la cola de casos.
 

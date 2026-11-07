@@ -1,6 +1,6 @@
 # Instalación en Salesforce: Seguimiento de oportunidades
 
-> Plugin `ventas-seguimiento` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-seguimiento` 0.1.1. Actualizado: 2026-11-07.
 
 Los pasos completos están en [instalacion-salesforce.md](../../../docs/cliente/instalacion-salesforce.md).
 Aquí va lo que necesita este plugin.
@@ -8,8 +8,8 @@ Aquí va lo que necesita este plugin.
 ## Resumen
 
 1. Activar el servidor **SObject Reads** (`sobject-reads`) en **Setup > MCP Servers**.
-2. Crear la External Client App (callback `https://claude.ai/api/mcp/auth_callback`, *scopes*
-   `mcp_api` y `refresh_token`, PKCE, JWT) y copiar su Consumer Key.
+2. Crear la External Client App (callback `https://claude.ai/api/mcp/auth_callback`, solo `https`;
+   *scopes* `mcp_api` y `refresh_token`; JWT) y copiar su Consumer Key.
 3. Dar a los usuarios del plugin un Permission Set con **lectura** de los objetos y campos de abajo.
 4. Añadir el conector `salesforce` en Claude con la URL y el Consumer Key
    ([instalar-en-claude.md](../../../docs/cliente/instalar-en-claude.md)).

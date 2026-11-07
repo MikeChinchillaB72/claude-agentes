@@ -1,6 +1,6 @@
 # Guía de uso: Calificación de leads
 
-> Plugin `ventas-calificacion-leads` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-calificacion-leads` 0.1.1. Actualizado: 2026-11-07.
 
 **Para:** responsables de leads, SDR y vendedores que revisan los leads nuevos.
 

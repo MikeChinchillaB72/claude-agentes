@@ -1,6 +1,6 @@
 # Preguntas frecuentes, límites, costos y soporte: Clasificación y priorización de casos
 
-> Plugin `servicio-clasificacion-casos` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-clasificacion-casos` 0.1.1. Actualizado: 2026-11-07.
 
 ## De este plugin
 
@@ -40,7 +40,7 @@ Todo lo que propone lo revisa y aplica una persona. Si un error se repite, avisa
 - **Los permisos del usuario mandan:** no ve más que lo que el usuario ve en el CRM.
 - **Volumen:** cada petición trae un número acotado de registros (ver `references/criterios.md`).
   Para análisis masivos hace falta otra arquitectura (Agent SDK).
-- **Sin probar en plataforma real** en la versión 0.1.0.
+- **Sin probar en plataforma real** en la versión 0.1.1.
 
 ## Costos
 

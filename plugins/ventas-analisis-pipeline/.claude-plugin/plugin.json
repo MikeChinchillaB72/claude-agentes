@@ -1,11 +1,12 @@
 {
   "name": "ventas-analisis-pipeline",
   "displayName": "Análisis del pipeline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Responde en lenguaje natural preguntas sobre el pipeline de ventas y señala las oportunidades en riesgo, con el motivo y una acción sugerida. Solo lee: funciona con Sales Cloud o monday CRM.",
   "author": {
     "name": "Miguel Chinchilla Borjas"
   },
+  "license": "LicenseRef-Propietaria-Codexue",
   "repository": "https://github.com/MikeChinchillaB72/claude-agentes",
   "keywords": [
     "ventas",

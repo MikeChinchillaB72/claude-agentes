@@ -1,9 +1,9 @@
 # Reglas de trabajo
 
 > Aplican a todo lo que se crea en este repositorio: agentes, plugins, herramientas y documentos.
-> Adoptadas el 2026-11-06. Actualizado: 2026-11-06.
+> Adoptadas el 2026-11-06. Actualizado: 2026-11-07.
 >
-> - **M1 a M8** son las reglas de Miguel.
+> - **M1 a M9** son las reglas de Miguel.
 > - **T1 a T16** salen de los estándares de TeloHago que aplican a este proyecto
 >   (`docs/estandares.md`, `docs/README.md` y el hook de commits de ese repositorio).
 >   Lo que es propio de una app móvil (accesibilidad, diseño responsivo, dinero, tiendas) no aplica aquí.
@@ -39,6 +39,7 @@ configuración, en [`config/redes.toml`](../config/redes.toml).
 | M6 | **Se documenta todo lo que se hace**: qué, por qué y con qué fuentes | ✅ | bitácora diaria + red `docs` |
 | M7 | **Todo es 100% configurable; nada ajustable en el código.** Los valores viven en [`config/`](../config/) y se explican en [CONFIGURACION.md](CONFIGURACION.md) | ✅ | redes `literales` y `docs` |
 | M8 | **Se documenta el código creado**: cada módulo, clase y función pública lleva su docstring | ✅ | red `docstrings` |
+| M9 | **Nada se cambia sin el «hazlo» de Miguel.** Crear archivos, hacer commits, subir, abrir PR o publicar espera su «hazlo» o su aprobación explícita en una tarjeta de decisión. Investigar, leer y proponer no lo necesitan. La aprobación cubre solo lo que se propuso | 📄 | a mano |
 
 **Excepción a M7, con su motivo (regla T3):** las invariantes de seguridad están en
 el código a propósito, porque ningún archivo de configuración debe poder relajarlas:
@@ -96,7 +97,7 @@ monday.com llama a sus productos «monday CRM» y «monday service»
 |---|---|---|
 | Antes de un commit hecho por Claude Code | Hook `PreToolUse` en [`.claude/settings.json`](../.claude/settings.json) | `python -m redes`; si falla, el commit se deniega |
 | Antes de un commit hecho a mano | [`.pre-commit-config.yaml`](../.pre-commit-config.yaml) (instalar con `pre-commit install`) | gitleaks + `python -m redes` |
-| En cada push a `main` y cada PR | [`.github/workflows/pruebas.yml`](../.github/workflows/pruebas.yml) | `python -m redes`, `pytest` y gitleaks sobre todo el historial |
+| En cada push a `main` y cada PR | [`.github/workflows/pruebas.yml`](../.github/workflows/pruebas.yml) | `python -m redes`, `pytest`, gitleaks sobre todo el historial y `claude plugin validate` del catálogo y de cada plugin |
 
 ## Añadir una regla nueva
 

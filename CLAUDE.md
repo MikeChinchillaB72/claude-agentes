@@ -3,7 +3,7 @@
 Agentes y plugins de Claude en Python con el Claude Agent SDK. Se trabaja en español.
 
 - **Reglas de trabajo:** lee y cumple [docs/REGLAS.md](docs/REGLAS.md) en todo cambio
-  (M1–M8 de Miguel, T1–T16 de TeloHago). En corto: no asumir; investigar mejores
+  (M1–M9 de Miguel, T1–T16 de TeloHago). En corto: nada se cambia sin el «hazlo» de Miguel; no asumir; investigar mejores
   prácticas actuales antes de crear; preguntar a Miguel lo que es decisión suya y no
   preguntar lo que se sabe; no dejar nada pendiente sin escribirlo en
   `docs/pendientes.md`; documentar todo y el código; nada ajustable en el código.

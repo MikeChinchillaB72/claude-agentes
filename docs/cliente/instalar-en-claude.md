@@ -67,7 +67,8 @@ En **Customize > Plugins > Add** hay dos caminos:
   El `.zip` debe tener `.claude-plugin/plugin.json` en su raíz o dentro de una sola carpeta.
 
 Luego se añade el conector en **Customize > Connectors > + > Add custom connector** con los
-mismos datos del paso 2 (la URL va en el campo principal; el Client ID, en **Advanced settings**).
+mismos datos del paso 2: la URL en **MCP Server URL**, **Sign in now** y **Use your own OAuth client**
+con el Client ID (detalle en [instalacion-salesforce.md](instalacion-salesforce.md#4-añadir-el-conector-en-claude)).
 
 ## Claude Code
 
@@ -85,9 +86,11 @@ servidores del `.mcp.json` directamente y `/mcp` muestra su estado.
 **Sin comprobar todavía:** la autenticación de Salesforce desde Claude Code. El servidor de
 Salesforce usa la External Client App de la empresa, y Claude Code necesita su Client ID. Si
 `/mcp` no logra iniciar sesión, se puede añadir el servidor a mano con
-`claude mcp add --transport http --client-id <Consumer Key> --callback-port <puerto> salesforce <URL>`
-usando como callback `http://localhost:<puerto>/callback` en la External Client App.
-Queda como pendiente de la prueba real (P5 en [pendientes.md](../pendientes.md)).
+`claude mcp add --transport http --client-id <Consumer Key> --callback-port <puerto> salesforce <URL>`.
+Ese camino necesita el callback `http://localhost:<puerto>/callback`, y la External Client App
+**rechaza direcciones `http://`** (comprobado el 2026-11-07). Hay que probar si Salesforce acepta
+`localhost` de otra forma. Queda como pendiente de la prueba real (P5 en
+[pendientes.md](../pendientes.md)). Mientras tanto, el camino comprobado es claude.ai.
 
 ## Actualizar y desinstalar
 

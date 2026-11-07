@@ -1,6 +1,6 @@
 # Seguridad y datos: Seguimiento de oportunidades
 
-> Plugin `ventas-seguimiento` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `ventas-seguimiento` 0.1.1. Actualizado: 2026-11-07.
 
 El modelo común está en [seguridad.md](../../../docs/cliente/seguridad.md). Aquí va lo propio de este plugin.
 

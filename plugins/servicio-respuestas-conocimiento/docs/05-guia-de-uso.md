@@ -1,6 +1,6 @@
 # Guía de uso: Respuestas con la base de conocimiento
 
-> Plugin `servicio-respuestas-conocimiento` 0.1.0. Actualizado: 2026-11-07.
+> Plugin `servicio-respuestas-conocimiento` 0.1.1. Actualizado: 2026-11-07.
 
 **Para:** agentes de soporte que responden casos.
 
