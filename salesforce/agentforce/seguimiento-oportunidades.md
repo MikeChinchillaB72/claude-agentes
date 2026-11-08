@@ -104,9 +104,20 @@ salida **Oportunidades** como visible para el modelo (*Show in conversation* o e
 
 ## Modelo
 
-En **Agentforce Builder** se elige Claude para este agente (Agent Script, `model_config`). El
-nombre exacto del modelo se confirma al crear el agente (P15 en
-[pendientes](../../docs/pendientes.md)).
+En el builder nuevo, el modelo no está en **Agent Settings**: se escribe en el Agent Script (icono
+**</>** del lienzo), en el nivel superior, al mismo nivel que `system:`
+([Specify Different Models in Agent Script](https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-model.html),
+consultado el 2026-11-08):
+
+```
+model_config:
+    model: "model://sfdc_ai__DefaultBedrockAnthropicClaude55Sonnet"
+```
+
+Es Claude Sonnet 5.5. Salesforce recomienda Claude Haiku 4.5 (`sfdc_ai__DefaultBedrockAnthropicClaude45Haiku`)
+como el más probado con agentes; los nombres de todos los modelos Claude están en
+[Supported Models](https://developer.salesforce.com/docs/ai/agentforce/guide/supported-models.html). El
+enrutador (`start_agent agent_router`) conserva su propio clasificador.
 
 ## Permisos
 
