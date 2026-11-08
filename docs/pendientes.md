@@ -27,9 +27,9 @@
 - **P15 · Agente de Agentforce para `ventas-seguimiento`.** El agente «Asistente de Seguimiento» está
   creado en la Developer Edition con Claude Sonnet 5.5 y pasa P1, P6 a P9 y P11 en Live Test; está activo y funciona desde el panel de la app Sales (2026-11-08,
   detalle en [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md)). El
-  2026-11-08 Miguel decidió pasarlo a español y la bienvenida ya sale en español. Faltan: ver si la tarjeta
-  de confirmación también, P10, y nada más del agente: la versión con `AgentesLeerHistorialOportunidad` y las
-  instrucciones 10 a 12 quedó activa el 2026-11-08.
+  2026-11-08 Miguel decidió pasarlo a español y la bienvenida ya sale en español. La versión con
+  `AgentesLeerHistorialOportunidad` y las instrucciones 10 a 12 quedó activa el mismo día. Faltan: ver si la
+  tarjeta de confirmación también sale en español y P10.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 
