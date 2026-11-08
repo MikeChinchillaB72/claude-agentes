@@ -159,6 +159,13 @@ que en el Builder, marcando la que está abierta. Ante la sugerencia «Buscar ac
 relacionadas con esta oportunidad», que genera Salesforce, dijo que su herramienta no consulta
 actividades y no inventó nada.
 
+Lectura del historial (Live Test, 18:38 UTC): para «Prepárame un correo de seguimiento para
+PRUEBA-Initech Soporte anual», el agente buscó, llamó a `leer_historial_oportunidad` con el Id correcto y
+dirigió el correo al contacto principal real (Carlos Méndez, CTO, Decision Maker) citando la tarea
+«Llamada de descubrimiento con Carlos». Dos detalles a mejorar: mostró la tabla de las 5 oportunidades
+aunque se pidió una sola, y el correo habla de «nuestra propuesta» cuando la oportunidad está en
+Qualification y no hay ninguna propuesta registrada.
+
 ## Comprobado en la Developer Edition (2026-11-08)
 
 Pruebas en el Preview del Builder, modo **Live Test**, con Claude Sonnet 5.5 y verificadas en la org con
