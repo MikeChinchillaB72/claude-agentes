@@ -28,8 +28,8 @@
   `AgentesBuscarOportunidadesSinActividad` (con su prueba) y las instrucciones del subagente en
   [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md). La clase y su prueba
   pasan en la Developer Edition (10 de 10, 2026-11-08). Faltan: que Miguel termine el agente «Asistente de Seguimiento» (creado el
-  2026-11-08 con la plantilla Agentforce Employee Agent y Claude Sonnet 5.5 en `model_config`) y corra P1 y P6 a P9. Sin comprobar: si existe
-  **Require User Confirmation** en el Builder nuevo, con qué usuario corren las acciones y cómo muestra el
+  2026-11-08 con la plantilla Agentforce Employee Agent y Claude Sonnet 5.5 en `model_config`) y corra P1 y P6 a P9. Sin comprobar: cómo pide la confirmación
+  `require_user_confirmation`, con qué usuario corren las acciones y cómo muestra el
   agente la lista de oportunidades. Tampoco hay todavía una acción para leer el historial (tareas y
   eventos) de cada oportunidad, que el plugin sí lee.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos

@@ -1,6 +1,7 @@
 # Subagente «Seguimiento de oportunidades» para Agentforce
 
-> Actualizado: 2026-11-08. **Estado:** sin probar en Agentforce. Es la versión de Agentforce
+> Actualizado: 2026-11-08. **Estado:** agente «Asistente de Seguimiento» creado en la Developer Edition
+> (plantilla Agentforce Employee Agent); sin probar todavía. Es la versión de Agentforce
 > de la skill [`seguimiento-oportunidades`](../../plugins/ventas-seguimiento/skills/seguimiento-oportunidades/SKILL.md)
 > del plugin `ventas-seguimiento`.
 
@@ -87,20 +88,23 @@ sin confirmar por la empresa. Si cambian allí, se cambian también aquí.
 
 ## Acciones
 
-En el Builder, **Add Action > Apex** (o **New Agent Action**, tipo *Apex*), una por clase. La
-etiqueta, la descripción y las entradas y salidas las toma Salesforce de la propia clase
-(`@InvocableMethod` e `@InvocableVariable`), igual que el servidor MCP.
+En el subagente, **Add Action**: tipo **Apex**, categoría **Invocable Method**, y la clase en
+**Reference Action**. Salesforce genera el bloque `actions:` con las entradas y salidas de la clase
+(`@InvocableVariable`), las expone en `reasoning.actions` con `with <entrada> = ...` (las rellena el
+modelo) y añade la transición en el Agent Router. Las fechas quedan como `object` con
+`lightning__dateType` y la lista de oportunidades como `list[object]` con `lightning__recordInfoType`.
 
-| Acción | Clase | Escribe | Pedir confirmación |
+| Action Name | Clase | Etiqueta (`label`) | `require_user_confirmation` |
 |---|---|---|---|
-| Buscar oportunidades sin actividad reciente | `AgentesBuscarOportunidadesSinActividad` | No | No |
-| Actualizar próximo paso de una oportunidad | `AgentesActualizarProximoPaso` | Sí | Sí |
-| Crear tarea de seguimiento en una oportunidad | `AgentesCrearTareaSeguimiento` | Sí | Sí |
-| Mover fecha de cierre de una oportunidad | `AgentesMoverFechaCierre` | Sí | Sí |
+| `buscar_oportunidades_sin_actividad` | `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | `False` |
+| `actualizar_proximo_paso` | `AgentesActualizarProximoPaso` | Actualizar próximo paso de una oportunidad | `True` |
+| `crear_tarea_seguimiento` | `AgentesCrearTareaSeguimiento` | Crear tarea de seguimiento en una oportunidad | `True` |
+| `mover_fecha_cierre` | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | `True` |
 
-En las tres que escriben, marcar **Require User Confirmation** si el Builder lo ofrece; es la
-segunda llave que en claude.ai da la aprobación de la herramienta. En la de búsqueda, marcar la
-salida **Oportunidades** como visible para el modelo (*Show in conversation* o equivalente).
+La descripción de cada acción es la de su `@InvocableMethod`. Al crearlas, el Builder pone como
+etiqueta el *Action Name* y no añade `require_user_confirmation`: las dos cosas se cambian a mano en el
+script. `require_user_confirmation: True` es la segunda llave que en claude.ai da la aprobación de la
+herramienta.
 
 ## Modelo
 
@@ -128,11 +132,11 @@ conversación.
 
 ## Sin comprobar
 
-- Si **Require User Confirmation** existe con ese nombre en el Builder nuevo.
 - Si las acciones corren con los permisos del usuario de la conversación o con los del *agent
   user*. Las clases son `with sharing` y usan `USER_MODE`, así que respetan los permisos de quien
   las ejecute, pero quién es ese usuario lo decide Agentforce.
 - Cómo muestra el agente la lista de oportunidades (`List<Opportunity>`) que devuelve la búsqueda.
+- Cómo pide la confirmación `require_user_confirmation: True` en la conversación.
 
 Se comprueban con las pruebas P1 y P6 a P9 de
 [06-pruebas-de-aceptacion.md](../../plugins/ventas-seguimiento/docs/06-pruebas-de-aceptacion.md).
