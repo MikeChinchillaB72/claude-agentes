@@ -131,6 +131,12 @@ etiqueta el *Action Name* y no añade `require_user_confirmation`: las dos cosas
 script. `require_user_confirmation: True` es la segunda llave que en claude.ai da la aprobación de la
 herramienta.
 
+Al revisar el script de la org el 2026-11-08 (19:06 UTC), `crear_tarea_seguimiento` tenía
+`require_user_confirmation: False`, `leer_historial_oportunidad` lo tenía en `True` y las cinco acciones
+llevaban el *Action Name* como etiqueta. Se corrigió todo en el script, y desde entonces la tarea pide
+confirmación. Conviene revisar el bloque `actions:` entero cada vez que se añade o se vuelve a crear
+una acción.
+
 El Builder genera los campos Id de Apex con el tipo `id`, y **Problems** avisa de que está obsoleto
 («Use object instead»). Son avisos, no errores, y las acciones funcionan así (P7 a P9); no se cambian a
 mano para no romper el mapeo con Apex.
@@ -202,6 +208,8 @@ Hallazgos:
   Se reconoce porque el mensaje de la acción no es el de la clase.
 - **Las acciones corren con el usuario de la conversación.** Los cambios figuran como hechos por él
   (`LastModifiedBy`), así que se respetan sus permisos y su compartición.
+- **Cambiar las salidas de una clase no actualiza la acción.** Para que el Builder tome salidas nuevas,
+  hay que quitar la acción del script y volver a añadirla (o escribir las salidas a mano).
 - **`require_user_confirmation: True` muestra una tarjeta Confirm / Cancel** con los valores exactos antes
   de ejecutar. En una acción sin la línea también aparece, así que en la búsqueda hay que poner `False`.
 - El texto de la tarjeta lo genera Salesforce en el idioma del agente (`en_US` por defecto).
@@ -217,6 +225,15 @@ por defecto es Spanish, sin idiomas adicionales, y en **Settings > System Messag
 - Error: «Algo salió mal. Inténtalo de nuevo.»
 
 Comprobado en Live Test: la bienvenida sale en español.
+
+Estado de la oportunidad en el historial (Live Test, 19:09 UTC, script corregido): para «Prepárame un
+correo de seguimiento para PRUEBA-Globex Implementación CRM» el agente trabajó solo con esa oportunidad.
+La etapa, el monto, la fecha de cierre, la última actividad, la tarea pendiente y el contacto principal
+(Luis Pérez) coinciden con la org. El correo solo menciona la demo del 17 de octubre, que consta en el
+historial; no presenta la tarea como una cita acordada y avisa de que el historial no confirma que se
+enviaran las referencias. Al pedir «crea la tarea de seguimiento» salió la tarjeta de confirmación, y
+tras confirmar se creó la tarea `00Tfj00004IE2n7EAD` (vence el 2026-11-10, ligada a Luis Pérez). El
+próximo paso no se tocó: el agente lo propuso y preguntó.
 
 ## Sin comprobar
 
