@@ -164,7 +164,8 @@ conversación.
 4. Los vendedores abren el agente con el icono **Agentforce**, arriba a la derecha de la app Sales.
 
 Fuente: [Trailhead: Grant Access and Use the Agents](https://trailhead.salesforce.com/content/learn/projects/quick-start-create-employee-agents-in-agentforce/grant-access-and-use-the-agents).
-El 2026-11-08 la versión 1 quedó activa en la Developer Edition. Desde el panel de la app Sales el agente
+El 2026-11-08 la versión 1 quedó activa en la Developer Edition y, a las 18:46 UTC, la versión con el
+historial y las instrucciones 10 a 12. Desde el panel de la app Sales el agente
 saluda en español, propone sugerencias según el registro abierto y devuelve las mismas 5 oportunidades
 que en el Builder, marcando la que está abierta. Ante la sugerencia «Buscar actividades abiertas
 relacionadas con esta oportunidad», que genera Salesforce, dijo que su herramienta no consulta
