@@ -212,7 +212,10 @@ Hallazgos:
   hay que quitar la acción del script y volver a añadirla (o escribir las salidas a mano).
 - **`require_user_confirmation: True` muestra una tarjeta Confirm / Cancel** con los valores exactos antes
   de ejecutar. En una acción sin la línea también aparece, así que en la búsqueda hay que poner `False`.
-- El texto de la tarjeta lo genera Salesforce en el idioma del agente (`en_US` por defecto).
+- **La tarjeta de confirmación sale en el idioma del usuario de Salesforce, no en el del agente.** Con el
+  usuario en inglés salió «You are about to change…», Confirm y Cancel; con el usuario en español,
+  «Confirmar», «Cancelar» y los campos del registro en español. Para que los vendedores la vean en
+  español, su usuario debe estar en español (**Settings > Language & Time Zone**).
 
 ## Idioma
 
@@ -224,7 +227,8 @@ por defecto es Spanish, sin idiomas adicionales, y en **Settings > System Messag
   paso, crear tareas o mover la fecha de cierre. ¿Qué necesitas?»
 - Error: «Algo salió mal. Inténtalo de nuevo.»
 
-Comprobado en Live Test: la bienvenida sale en español.
+Comprobado en Live Test: la bienvenida sale en español. La tarjeta de confirmación depende del idioma del
+usuario (ver «Hallazgos»).
 
 Estado de la oportunidad en el historial (Live Test, 19:09 UTC, script corregido): para «Prepárame un
 correo de seguimiento para PRUEBA-Globex Implementación CRM» el agente trabajó solo con esa oportunidad.
@@ -235,10 +239,13 @@ enviaran las referencias. Al pedir «crea la tarea de seguimiento» salió la ta
 tras confirmar se creó la tarea `00Tfj00004IE2n7EAD` (vence el 2026-11-10, ligada a Luis Pérez). El
 próximo paso no se tocó: el agente lo propuso y preguntó.
 
+En la consola de Sales con la versión activa (19:15 UTC), desde el registro abierto de PRUEBA-Initech
+Soporte anual: al pedir «Mueve la fecha de cierre al 2026-12-20» salió la tarjeta de confirmación y, con
+**Cancel**, el agente dijo que canceló el cambio, que la fecha sigue en 2026-12-16 y que no lo vuelve a
+proponer salvo que se pida. En la org la fecha siguió en 2026-12-16 y la oportunidad no se modificó.
+
 ## Sin comprobar
 
-- Cómo queda el agente al activarlo y ponerlo a disposición de los vendedores (fuera del Preview).
-- Si el texto de la tarjeta de confirmación sale en español con el agente en español.
 - P10 (oportunidad cerrada).
 
 Se comprueban con las pruebas de
