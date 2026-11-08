@@ -116,6 +116,10 @@ etiqueta el *Action Name* y no añade `require_user_confirmation`: las dos cosas
 script. `require_user_confirmation: True` es la segunda llave que en claude.ai da la aprobación de la
 herramienta.
 
+El Builder genera los campos Id de Apex con el tipo `id`, y **Problems** avisa de que está obsoleto
+(«Use object instead»). Son avisos, no errores, y las acciones funcionan así (P7 a P9); no se cambian a
+mano para no romper el mapeo con Apex.
+
 ## Modelo
 
 En el builder nuevo, el modelo no está en **Agent Settings**: se escribe en el Agent Script (icono

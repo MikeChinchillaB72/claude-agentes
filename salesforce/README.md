@@ -2,8 +2,7 @@
 
 > Actualizado: 2026-11-08. **Estado:** las cuatro clases compilan y sus pruebas pasan en la Developer
 > Edition. Las tres que escriben están probadas desde claude.ai; la búsqueda, todavía no desde
-> Agentforce. `AgentesLeerHistorialOportunidad` tiene la sintaxis comprobada y está **sin compilar en
-> una org** (P15 en [pendientes](../docs/pendientes.md)).
+> Agentforce (P15 en [pendientes](../docs/pendientes.md)).
 
 Proyecto de Salesforce con las acciones que los plugins de Claude pueden ejecutar en el CRM. Cada
 acción es una clase Apex `@InvocableMethod` que se publica como herramienta de un **servidor MCP
@@ -134,7 +133,7 @@ todo cambio se vuelve a probar con las pruebas de aceptación del plugin, no sol
 ## Comprobado en la Developer Edition (2026-11-07)
 
 - Las clases compilan y las 37 pruebas de Apex pasan. El 2026-11-08 pasan también las 10 de
-  `AgentesBuscarOppSinActividadTest`.
+  `AgentesBuscarOppSinActividadTest` y las 8 de `AgentesLeerHistorialOportunidadTest`.
 - El servidor publica cada acción con el nombre de su clase, y claude.ai la agrupa en *Tool permissions*
   como **Write/delete tools**, aparte de las seis de lectura.
 - Las acciones funcionan desde claude.ai (pruebas P6 a P9 de `ventas-seguimiento`).
