@@ -8,7 +8,7 @@
  * que corre la prueba y no tienen actividad.
  */
 @IsTest
-private class AgentesBuscarOportunidadesSinActividadTest {
+private class AgentesBuscarOppSinActividadTest {
 
     /** Días que usan las pruebas; el valor inicial de `dias_sin_actividad` en criterios.md. */
     private static final Integer DIAS = 7;

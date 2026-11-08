@@ -1,8 +1,8 @@
 # Acciones de Salesforce para los plugins
 
-> Actualizado: 2026-11-08. **Estado:** las tres acciones que escriben están probadas en la Developer
-> Edition (sección «Comprobado»). `AgentesBuscarOportunidadesSinActividad` tiene la sintaxis comprobada
-> con un analizador de Apex y está **sin compilar en una org** (P15 en [pendientes](../docs/pendientes.md)).
+> Actualizado: 2026-11-08. **Estado:** las cuatro clases compilan y sus pruebas pasan en la Developer
+> Edition. Las tres que escriben están probadas desde claude.ai; la búsqueda, todavía no desde
+> Agentforce (P15 en [pendientes](../docs/pendientes.md)).
 
 Proyecto de Salesforce con las acciones que los plugins de Claude pueden ejecutar en el CRM. Cada
 acción es una clase Apex `@InvocableMethod` que se publica como herramienta de un **servidor MCP
@@ -36,7 +36,7 @@ Cada clase tiene su clase de prueba, como pide Salesforce
 | `AgentesActualizarProximoPaso` | `AgentesActualizarProximoPasoTest` |
 | `AgentesCrearTareaSeguimiento` | `AgentesCrearTareaSeguimientoTest` |
 | `AgentesMoverFechaCierre` | `AgentesMoverFechaCierreTest` |
-| `AgentesBuscarOportunidadesSinActividad` | `AgentesBuscarOportunidadesSinActividadTest` |
+| `AgentesBuscarOportunidadesSinActividad` | `AgentesBuscarOppSinActividadTest` |
 
 Los datos los crea una sola fábrica, `AgentesTestDataFactory` (`@IsTest`). Cada clase de prueba:
 
@@ -73,7 +73,7 @@ Con [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli), desd
 
 ```bash
 sf org login web --alias agentes-crm
-sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOportunidadesSinActividadTest
+sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOppSinActividadTest
 ```
 
 En producción, Salesforce exige que las pruebas pasen y cubran al menos el 75 % del Apex.
@@ -106,6 +106,9 @@ El agente de Agentforce usa las mismas tres acciones más la búsqueda. Las inst
 «Seguimiento de oportunidades», listas para copiar en Agentforce Builder, están en
 [agentforce/seguimiento-oportunidades.md](agentforce/seguimiento-oportunidades.md).
 
+Los nombres de clase Apex tienen como máximo 40 caracteres. Por eso la prueba de
+`AgentesBuscarOportunidadesSinActividad` se llama `AgentesBuscarOppSinActividadTest` y no `<Clase>Test`.
+
 ## Las descripciones son instrucciones para Claude
 
 Claude no ve el código Apex. Para elegir una acción y llenar sus datos solo ve lo que el servidor
@@ -125,7 +128,8 @@ todo cambio se vuelve a probar con las pruebas de aceptación del plugin, no sol
 
 ## Comprobado en la Developer Edition (2026-11-07)
 
-- Las clases compilan y las 37 pruebas de Apex pasan.
+- Las clases compilan y las 37 pruebas de Apex pasan. El 2026-11-08 pasan también las 10 de
+  `AgentesBuscarOppSinActividadTest`.
 - El servidor publica cada acción con el nombre de su clase, y claude.ai la agrupa en *Tool permissions*
   como **Write/delete tools**, aparte de las seis de lectura.
 - Las acciones funcionan desde claude.ai (pruebas P6 a P9 de `ventas-seguimiento`).

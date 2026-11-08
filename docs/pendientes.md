@@ -26,8 +26,8 @@
   `.mcp.json` (Claude se lo propone).
 - **P15 · Agente de Agentforce para `ventas-seguimiento`.** El 2026-11-08 se añadieron la acción
   `AgentesBuscarOportunidadesSinActividad` (con su prueba) y las instrucciones del subagente en
-  [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md). Faltan: que Miguel
-  despliegue la clase y su prueba en la Developer Edition, cree el agente en Agentforce Builder con Claude
+  [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md). La clase y su prueba
+  pasan en la Developer Edition (10 de 10, 2026-11-08). Faltan: que Miguel cree el agente en Agentforce Builder con Claude
   como modelo (confirmar el nombre exacto del modelo) y corra P1 y P6 a P9. Sin comprobar: si existe
   **Require User Confirmation** en el Builder nuevo, con qué usuario corren las acciones y cómo muestra el
   agente la lista de oportunidades. Tampoco hay todavía una acción para leer el historial (tareas y
