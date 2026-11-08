@@ -26,9 +26,9 @@
   `.mcp.json` (Claude se lo propone).
 - **P15 · Agente de Agentforce para `ventas-seguimiento`.** El agente «Asistente de Seguimiento» está
   creado en la Developer Edition con Claude Sonnet 5.5 y pasa P1 y P6 a P9 en Live Test (2026-11-08,
-  detalle en [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md)). Faltan:
-  decidir el idioma del agente (Miguel; hoy `en_US`, con la bienvenida y la tarjeta de confirmación en
-  inglés), activarlo y probarlo fuera del Preview, P10 y P11, y una acción para leer el historial (tareas y
+  detalle en [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md)). El
+  2026-11-08 Miguel decidió pasarlo a español y la bienvenida ya sale en español. Faltan: ver si la tarjeta
+  de confirmación también, activarlo y probarlo fuera del Preview, P10 y P11, y una acción para leer el historial (tareas y
   eventos) de cada oportunidad, que el plugin sí lee.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.

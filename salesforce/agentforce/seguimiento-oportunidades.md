@@ -153,10 +153,22 @@ Hallazgos:
   de ejecutar. En una acción sin la línea también aparece, así que en la búsqueda hay que poner `False`.
 - El texto de la tarjeta lo genera Salesforce en el idioma del agente (`en_US` por defecto).
 
+## Idioma
+
+Decisión de Miguel del 2026-11-08: el agente va en español. En **Settings > Language Settings** el idioma
+por defecto es Spanish, sin idiomas adicionales, y en **Settings > System Messages**:
+
+- Welcome: «Hola, soy el Asistente de Seguimiento. Te ayudo a encontrar tus oportunidades abiertas sin
+  actividad reciente, a preparar correos y próximos pasos y, si lo confirmas, a actualizar el próximo
+  paso, crear tareas o mover la fecha de cierre. ¿Qué necesitas?»
+- Error: «Algo salió mal. Inténtalo de nuevo.»
+
+Comprobado en Live Test: la bienvenida sale en español.
+
 ## Sin comprobar
 
 - Cómo queda el agente al activarlo y ponerlo a disposición de los vendedores (fuera del Preview).
-- El idioma: los mensajes del sistema y de la tarjeta siguen en inglés mientras el agente esté en `en_US`.
+- Si el texto de la tarjeta de confirmación sale en español con el agente en español.
 - P10 y P11 (oportunidad cerrada y aprobación rechazada).
 
 Se comprueban con las pruebas de
