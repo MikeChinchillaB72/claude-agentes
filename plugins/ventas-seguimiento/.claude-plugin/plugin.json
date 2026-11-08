@@ -1,8 +1,8 @@
 {
   "name": "ventas-seguimiento",
   "displayName": "Seguimiento de oportunidades",
-  "version": "0.1.1",
-  "description": "Encuentra las oportunidades abiertas sin actividad reciente, lee su historial y redacta el correo de seguimiento y el próximo paso para que el vendedor los revise. Solo lee: funciona con Sales Cloud o monday CRM.",
+  "version": "0.2.0",
+  "description": "Encuentra las oportunidades abiertas sin actividad reciente, lee su historial y redacta el correo de seguimiento y el próximo paso. Con confirmación del vendedor, actualiza el próximo paso, crea la tarea de seguimiento o mueve la fecha de cierre. Funciona con Sales Cloud o monday CRM.",
   "author": {
     "name": "Miguel Chinchilla Borjas"
   },

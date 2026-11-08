@@ -12,7 +12,7 @@ trae los dos conectores y la empresa conecta el que usa.
 
 | Área | Plugin | Qué hace | Salesforce | monday.com |
 |---|---|---|---|---|
-| Ventas | [ventas-seguimiento](../../plugins/ventas-seguimiento/README.md) | Encuentra oportunidades sin actividad reciente y redacta el seguimiento | Sales Cloud | monday CRM |
+| Ventas | [ventas-seguimiento](../../plugins/ventas-seguimiento/README.md) | Encuentra oportunidades sin actividad reciente, redacta el seguimiento y, con confirmación, actualiza el próximo paso, crea la tarea o mueve la fecha de cierre | Sales Cloud | monday CRM |
 | Ventas | [ventas-calificacion-leads](../../plugins/ventas-calificacion-leads/README.md) | Puntúa un lead con la rúbrica de la empresa y busca duplicados | Sales Cloud | monday CRM |
 | Ventas | [ventas-analisis-pipeline](../../plugins/ventas-analisis-pipeline/README.md) | Responde preguntas sobre el pipeline y señala oportunidades en riesgo | Sales Cloud | monday CRM |
 | Servicio | [servicio-atencion-contexto](../../plugins/servicio-atencion-contexto/README.md) | Reúne la cuenta, los contactos y los casos del cliente antes de responder | Service Cloud | monday service |
@@ -24,9 +24,10 @@ que ya usan Claude. Los plugins no son un chat para los clientes finales.
 
 ## Qué hace y qué no hace esta versión
 
-- **Solo lee.** Ningún plugin crea, cambia ni borra registros en el CRM, y ninguno envía
-  correos. Redacta y propone; la persona decide y aplica el cambio. Esto se garantiza con
-  los permisos de la conexión, no con las instrucciones (ver [seguridad.md](seguridad.md)).
+- **Lee, y escribe solo donde se decidió.** Cinco plugins solo leen. `ventas-seguimiento` 0.2.0
+  puede actualizar el próximo paso, crear una tarea de seguimiento y mover la fecha de cierre,
+  siempre con la confirmación del usuario. Ningún plugin borra registros ni envía correos. Los
+  límites los ponen los permisos de la conexión, no solo las instrucciones (ver [seguridad.md](seguridad.md)).
 - **Respeta los permisos de cada usuario.** Cada persona se conecta con su propia cuenta
   de Salesforce o de monday.com, y ve solo lo que esa cuenta ya puede ver.
 - **No guarda datos.** Los datos se quedan en el CRM. Claude los consulta cuando hacen falta.

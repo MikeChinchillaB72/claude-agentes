@@ -1,12 +1,12 @@
 # Levantamiento de requisitos: Seguimiento de oportunidades
 
-> Plugin `ventas-seguimiento` 0.1.1. Actualizado: 2026-11-07.
+> Plugin `ventas-seguimiento` 0.2.0. Actualizado: 2026-11-07.
 > **Estado: pendiente de la información del cliente.** Lo marcado `PENDIENTE` no se ha
 > inventado: lo tiene que aportar la empresa (P1 en [pendientes](../../../docs/pendientes.md)).
 
 ## Objetivo
 
-Encuentra las oportunidades abiertas que llevan días sin actividad, lee el historial reciente de cada una y redacta un correo de seguimiento y un próximo paso. El vendedor revisa el borrador y lo envía él mismo.
+Encuentra las oportunidades abiertas que llevan días sin actividad, lee el historial reciente de cada una y redacta un correo de seguimiento y un próximo paso. Con la confirmación del vendedor, actualiza el próximo paso, crea una tarea de seguimiento o mueve la fecha de cierre vencida. El correo lo envía el vendedor él mismo.
 
 - **Usuarios:** Vendedores y ejecutivos de cuenta que gestionan oportunidades abiertas.
 - **Plataformas:** Salesforce Sales Cloud o monday CRM.
@@ -18,7 +18,9 @@ Encuentra las oportunidades abiertas que llevan días sin actividad, lee el hist
 |---|---|
 | Se entrega como plugin de Claude | Lo usan personas que ya trabajan con Claude, sin servidor propio |
 | Un mismo plugin sirve para Salesforce y para monday.com | Decisión de Miguel del 2026-11-06; la empresa conecta solo el conector de su plataforma |
-| Solo lectura en esta versión | Mínimo privilegio: proponer y que la persona aplique. Escribir en el CRM es una decisión pendiente |
+| Escribe en el CRM solo tres acciones, siempre confirmadas | Decisión de Miguel del 2026-11-07: actualizar el próximo paso, crear una tarea de seguimiento y mover la fecha de cierre. Nada se borra ni se envía al cliente |
+| En Salesforce, las acciones son Apex en un servidor MCP personalizado | Decisión de Miguel del 2026-11-07: Claude solo puede ejecutar esas acciones, con sus validaciones, en vez de editar cualquier campo ([salesforce/](../../../salesforce/README.md)) |
+| La confirmación tiene dos llaves | La skill pide el sí del vendedor, y el Owner de Claude pone las herramientas de escritura en *Needs approval* |
 | Usa los servidores MCP alojados por Salesforce y monday.com | Sin infraestructura que mantener; respetan los permisos de cada usuario |
 
 ## Lo que debe aportar la empresa
@@ -43,7 +45,9 @@ Encuentra las oportunidades abiertas que llevan días sin actividad, lee el hist
 | R2 | ¿Qué cuenta como actividad: tareas, eventos, correos registrados, llamadas? | Define qué se lee y qué fecha se usa | PENDIENTE |
 | R3 | ¿Hay plantillas, tono o firma obligatoria para los correos? | Se ponen en `tono_del_correo` | PENDIENTE |
 | R4 | ¿Qué etapas se excluyen (por ejemplo, las que esperan al cliente)? | Evita seguimientos innecesarios | PENDIENTE |
-| R5 | monday CRM: ¿cómo se llaman el tablero de negocios y sus columnas de responsable, monto, etapa, cierre y última actividad? | Mapeo de columnas | PENDIENTE |
+| R5 | monday CRM: ¿cómo se llaman el tablero de negocios y sus columnas de responsable, monto, etapa, cierre, última actividad y próximo paso? ¿Usan un tablero de tareas? | Mapeo de columnas | PENDIENTE |
+| R6 | ¿Qué acciones se habilitan: actualizar el próximo paso, crear tareas, mover la fecha de cierre? | `acciones_habilitadas` y las herramientas del servidor | PENDIENTE |
+| R7 | ¿Con cuántos días de plazo se crea una tarea de seguimiento? | `vencimiento_tarea` (se propone 2 días) | PENDIENTE |
 
 ## Criterios de negocio
 
@@ -57,6 +61,9 @@ Ahí se cambian, sin tocar las instrucciones. Valores iniciales, **sin confirmar
 | `interacciones_a_leer` | 5 | Cuántas actividades recientes leer por oportunidad (el documento de casos de uso dice de 3 a 5) |
 | `monto_minimo` | sin mínimo | Monto a partir del cual se incluye una oportunidad |
 | `tono_del_correo` | profesional y breve | Tono y firma de los correos que redacta |
+| `acciones_habilitadas` | `actualizar_proximo_paso`, `crear_tarea`, `mover_fecha_cierre` | Acciones que puede ejecutar con confirmación |
+| `vencimiento_tarea` | 2 días después de hoy | Vencimiento que se propone para una tarea |
+| `max_acciones_por_confirmacion` | 10 | Cuántas acciones se confirman de una vez |
 
 ## Datos que usa
 
@@ -71,6 +78,12 @@ Ahí se cambian, sin tocar las instrucciones. Valores iniciales, **sin confirmar
 
 Son campos estándar. Si la empresa usa campos personalizados para lo mismo, hay que anotarlos aquí.
 
+| Salesforce: lo que escribe | Campos | Acción |
+|---|---|---|
+| `Opportunity` (solo abiertas) | NextStep | `actualizar_proximo_paso` |
+| `Opportunity` (solo abiertas) | CloseDate (hoy o después) | `mover_fecha_cierre` |
+| `Task` (nueva) | WhatId, WhoId, Subject, ActivityDate, Description, OwnerId (el usuario conectado) | `crear_tarea` |
+
 | monday CRM | Datos | Para qué |
 |---|---|---|
 | Negocios (*Deals*) | Responsable, monto, etapa, fecha de cierre, fecha de última actividad, contacto vinculado | Buscar los negocios sin actividad |
@@ -80,7 +93,8 @@ Los nombres reales del tablero y sus columnas: PENDIENTE (mapeo en `references/c
 
 ## Fuera del alcance de esta versión
 
-- Escribir, crear o borrar registros, y enviar correos o mensajes.
+- Cualquier escritura fuera de las tres acciones: cambiar la etapa, el monto o el responsable, y borrar registros.
+- Enviar correos o mensajes al cliente (fase 2, decisión de Miguel del 2026-11-07).
 - Ejecutarse sola (programada o por un evento): un plugin responde cuando alguien le pregunta.
 - Uso por clientes finales.
 

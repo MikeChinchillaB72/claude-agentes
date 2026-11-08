@@ -12,9 +12,13 @@ debe poder leer; cada plugin los lista en su `docs/03-instalacion-salesforce.md`
 ## Cómo se conecta
 
 Los plugins usan los **servidores MCP alojados por Salesforce** (*hosted MCP servers*).
-No hay que instalar nada en la org ni mantener un servidor propio. Todos los plugins usan
-el servidor **SObject Reads** (`sobject-reads`), que según Salesforce es de
-«lectura y consulta, sin cambios»: esquema, SOQL, búsqueda y relaciones.
+No hay que mantener un servidor propio. Hay dos:
+
+- Los plugins de solo lectura usan el servidor **SObject Reads** (`sobject-reads`), que según
+  Salesforce es de «lectura y consulta, sin cambios»: esquema, SOQL, búsqueda y relaciones.
+- **`ventas-seguimiento`** (desde la versión 0.2.0) usa el servidor personalizado **`AgentesCRM`**:
+  las mismas herramientas de lectura más tres acciones Apex que se despliegan en la org. Ver
+  [Acciones: servidor personalizado AgentesCRM](#acciones-servidor-personalizado-agentescrm).
 
 - Cada llamada corre **con los permisos del usuario conectado**: seguridad a nivel de campo,
   permisos de objeto y reglas de compartición se aplican a cada herramienta.
@@ -28,14 +32,18 @@ el servidor **SObject Reads** (`sobject-reads`), que según Salesforce es de
 Los plugins traen la URL de producción en su `.mcp.json`. Para probar en un sandbox, el
 conector de la organización se añade con la URL de sandbox (paso 4).
 
+El servidor personalizado `AgentesCRM` no usa esta tabla: su URL lleva el dominio de la org y se copia
+de Setup (ver [Acciones](#acciones-servidor-personalizado-agentescrm)).
+
 ## 1. Activar el servidor MCP
 
 1. En **Setup**, buscar en Quick Find **MCP Servers** (está en el API Catalog).
 2. Si aparece la opción **Enable MCP Service**, activarla.
 3. En **Salesforce Servers**, activar **SObject Reads** (`sobject-reads`).
 
-No hace falta activar `sobject-all`, `sobject-mutations` ni `sobject-deletes`: escriben o borran,
-y esta versión de los plugins solo lee.
+No hay que activar `sobject-all`, `sobject-mutations` ni `sobject-deletes`: escriben o borran
+cualquier objeto que el usuario pueda editar. Las escrituras de los plugins van por acciones
+concretas en el servidor `AgentesCRM`.
 
 ## 2. Crear la External Client App
 
@@ -75,7 +83,7 @@ individual, en **Customize > Connectors > + > Add custom connector**. La pantall
 | Campo | Valor |
 |---|---|
 | Nombre | `Salesforce` |
-| MCP Server URL | La del servidor (producción o sandbox, tabla de arriba). Una Developer Edition usa la de producción |
+| MCP Server URL | `sobject-reads`: la de la tabla de arriba (una Developer Edition usa la de producción). `AgentesCRM`: la que muestra Setup, con el dominio de la org |
 | Authentication | **Sign in now**: cada usuario inicia sesión en Salesforce antes de usar nada |
 | OAuth client | **Use your own OAuth client**, con el Consumer Key del paso 2 como Client ID y el secreto vacío. No usar *Register automatically*, que registraría clientes nuevos en la org |
 | Request headers | Ninguno |
@@ -91,6 +99,39 @@ El servidor `sobject-reads` ofrece seis herramientas, todas de lectura (comproba
 del conector, **Tool permissions** deja elegir para cada una *Always allow*, *Needs approval* o
 *Never*. Para las pruebas conviene **Needs approval**, para ver cada consulta. Luego cada usuario conecta su cuenta desde la pestaña **Connectors** del plugin
 ([instalar-en-claude.md](instalar-en-claude.md#3-cada-usuario-conecta-su-cuenta)).
+
+## Acciones: servidor personalizado AgentesCRM
+
+Solo si la empresa usa `ventas-seguimiento` 0.2.0 o posterior. **Sin probar todavía en una org**
+(P10 en [pendientes.md](../pendientes.md)).
+
+Un servidor personalizado junta herramientas de lectura con acciones de negocio hechas en Apex o
+Flow ([Build Custom MCP Servers](https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/custom-servers.html)).
+Así Claude solo puede hacer lo que esas acciones permiten, con sus validaciones, en vez de editar
+cualquier campo.
+
+1. **Desplegar las acciones** de [salesforce/](../../salesforce/README.md) con Salesforce CLI. Las
+   pruebas de Apex tienen que pasar.
+2. En **Setup > MCP Servers > Salesforce Servers > Create Salesforce MCP Server**: **Label**
+   `Agentes CRM` y **Name** `AgentesCRM`. El nombre forma parte de la URL.
+3. **Add Server Assets > Add Tools**, tipo **Apex actions**: añadir solo las acciones que la empresa
+   habilite (`acciones_habilitadas` en el `criterios.md` del plugin):
+   - Actualizar próximo paso de una oportunidad (`AgentesActualizarProximoPaso`)
+   - Crear tarea de seguimiento en una oportunidad (`AgentesCrearTareaSeguimiento`)
+   - Mover fecha de cierre de una oportunidad (`AgentesMoverFechaCierre`)
+4. **Add Server Assets > Add from Server > sobject-reads**: añadir sus seis herramientas de lectura.
+5. **Activate** y copiar la **Server URL** tal como la muestra Setup. Lleva el dominio de la org:
+   `https://api.salesforce.com/platform/mcp/v1/d/<dominio>/<tipo>/custom/AgentesCRM` (por ejemplo `.../d/miempresa/develop/custom/AgentesCRM`
+   en una Developer Edition, comprobado el 2026-11-07). La URL general sin dominio, que sí sirve para
+   `sobject-reads`, no sirve para un servidor personalizado.
+6. Asignar a los usuarios el Permission Set **Agentes CRM - Acciones** y los permisos de edición
+   que lista el `docs/03-instalacion-salesforce.md` del plugin.
+7. En Claude, el conector de este plugin usa esa URL (paso 4 de esta guía) y, en **Tool permissions**,
+   las tres acciones van en **Needs approval**. Así cada cambio pide el sí del usuario, aunque las
+   instrucciones fallen.
+
+Los pasos 2 a 5 siguen el [taller oficial de Salesforce](https://developer.salesforce.com/workshops/headless-360-workshop/explore-salesforce-hosted-mcps/3-create-and-test-custom-server).
+Qué ediciones incluyen los servidores personalizados y si cobran por llamada está sin confirmar (P9).
 
 ## 5. Comprobar
 
@@ -123,6 +164,9 @@ incluyen los servidores MCP alojados.
 Consultadas el 2026-11-06 y el 2026-11-07.
 
 - [Standard MCP Servers Reference](https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/servers-reference.html) (Salesforce): servidores, solo lectura de SObject Reads, permisos por usuario
+- [Build Custom MCP Servers](https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/custom-servers.html) (Salesforce, consultada el 2026-11-07): servidores personalizados con Flows y Apex
+- [Expose Custom Apex as a Hosted MCP Tool](https://developer.salesforce.com/blogs/2026/05/expose-custom-apex-as-a-hosted-mcp-tool-for-agents) (Salesforce, consultada el 2026-11-07): `@InvocableMethod`, `with sharing` y `USER_MODE`
+- [Create a Custom Server](https://developer.salesforce.com/workshops/headless-360-workshop/explore-salesforce-hosted-mcps/3-create-and-test-custom-server) (taller de Salesforce, consultado el 2026-11-07): pasos en Setup y formato de la URL
 - [Create an External Client App](https://developer.salesforce.com/docs/platform/hosted-mcp-servers/guide/create-external-client-app.md) (Salesforce)
 - [Try Headless 360: activar los servidores](https://developer.salesforce.com/workshops/try-headless-360/1-activate-the-servers) y [conectar Claude](https://developer.salesforce.com/workshops/try-headless-360/3-connect-claude) (Salesforce)
 - [Connect Salesforce to Claude Desktop](https://claude.com/docs/third-party/claude-desktop/connectors-salesforce) (Claude): callback, scopes, endurecimiento y errores
