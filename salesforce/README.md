@@ -2,7 +2,8 @@
 
 > Actualizado: 2026-11-08. **Estado:** las cuatro clases compilan y sus pruebas pasan en la Developer
 > Edition. Las tres que escriben están probadas desde claude.ai; la búsqueda, todavía no desde
-> Agentforce (P15 en [pendientes](../docs/pendientes.md)).
+> Agentforce. `AgentesLeerHistorialOportunidad` tiene la sintaxis comprobada y está **sin compilar en
+> una org** (P15 en [pendientes](../docs/pendientes.md)).
 
 Proyecto de Salesforce con las acciones que los plugins de Claude pueden ejecutar en el CRM. Cada
 acción es una clase Apex `@InvocableMethod` que se publica como herramienta de un **servidor MCP
@@ -17,9 +18,10 @@ para ejecutar estas acciones, cada una con sus validaciones.
 | `AgentesActualizarProximoPaso` | Actualizar próximo paso de una oportunidad | Reemplaza `NextStep` de oportunidades abiertas | `ventas-seguimiento` |
 | `AgentesCrearTareaSeguimiento` | Crear tarea de seguimiento en una oportunidad | Crea una `Task` ligada a la oportunidad, asignada al usuario conectado | `ventas-seguimiento` |
 | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | Cambia `CloseDate` a hoy o una fecha posterior | `ventas-seguimiento` |
+| `AgentesLeerHistorialOportunidad` | Leer historial de una oportunidad | Solo lee: últimas N tareas y eventos de una oportunidad y su contacto principal | Agentforce |
 | `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | Solo lee: devuelve las oportunidades abiertas del usuario con N días o más sin actividad, de mayor a menor monto | Agentforce ([agentforce/](agentforce/seguimiento-oportunidades.md)) |
 
-La búsqueda es para el agente de Agentforce, que no tiene las herramientas de `sobject-reads`. En
+La búsqueda y la lectura del historial son para el agente de Agentforce, que no tiene las herramientas de `sobject-reads`. En
 claude.ai no hace falta añadirla al servidor `AgentesCRM`: el plugin ya busca con `sobject-reads`. Los
 días, el máximo y el monto mínimo llegan en cada llamada; no están en la clase (regla M7).
 
@@ -37,6 +39,7 @@ Cada clase tiene su clase de prueba, como pide Salesforce
 | `AgentesCrearTareaSeguimiento` | `AgentesCrearTareaSeguimientoTest` |
 | `AgentesMoverFechaCierre` | `AgentesMoverFechaCierreTest` |
 | `AgentesBuscarOportunidadesSinActividad` | `AgentesBuscarOppSinActividadTest` |
+| `AgentesLeerHistorialOportunidad` | `AgentesLeerHistorialOportunidadTest` |
 
 Los datos los crea una sola fábrica, `AgentesTestDataFactory` (`@IsTest`). Cada clase de prueba:
 
@@ -61,6 +64,8 @@ los nombres de los perfiles estándar al idioma del usuario. En una org nueva, l
 - **Solo oportunidades abiertas.** Una cerrada no se modifica ni sale en la búsqueda.
 - **Ninguna fecha pasada.** Las fechas se comparan con el día del usuario.
 - **Nada se borra.** Ninguna acción elimina registros.
+- **La lectura del historial solo lee** y resuelve todas las solicitudes con una sola consulta (la
+  oportunidad con subconsultas de tareas, eventos y contacto principal).
 - **La búsqueda solo lee** y solo devuelve oportunidades del usuario conectado. Usa una consulta por
   solicitud, porque cada solicitud trae sus propios filtros y su límite; si un flujo manda más
   solicitudes de las consultas que quedan, las sobrantes vuelven con error.
@@ -73,12 +78,12 @@ Con [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli), desd
 
 ```bash
 sf org login web --alias agentes-crm
-sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOppSinActividadTest
+sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOppSinActividadTest --tests AgentesLeerHistorialOportunidadTest
 ```
 
 En producción, Salesforce exige que las pruebas pasen y cubran al menos el 75 % del Apex.
 
-Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las cinco clases de prueba
+Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las seis clases de prueba
 (**File > New > Apex Class**), y correrlas con **Test > New Run**. La cobertura de cada clase sale en la
 pestaña **Tests** y en **Overall Code Coverage**.
 

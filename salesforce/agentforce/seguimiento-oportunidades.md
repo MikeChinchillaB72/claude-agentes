@@ -19,7 +19,7 @@ Cada sección de abajo es un campo del Builder.
 | Acciones que escriben | Las tres clases Apex, por MCP | Las mismas tres clases, como acciones del agente |
 | Valores de negocio | `references/criterios.md` | Escritos en las instrucciones de abajo |
 | Segunda llave | La aprobación de la herramienta en claude.ai | Ninguna por defecto; solo la confirmación en el chat (ver «Sin comprobar») |
-| Historial de cada oportunidad | Lee las últimas tareas y eventos | No lo lee todavía: no hay acción para eso |
+| Historial de cada oportunidad | Lee las últimas tareas y eventos con `sobject-reads` | La acción `AgentesLeerHistorialOportunidad` |
 
 ## Nombre
 
@@ -57,9 +57,11 @@ sin confirmar por la empresa. Si cambian allí, se cambian también aquí.
    actividad e Id, de mayor a menor monto. Marca las que tienen la fecha de cierre vencida. Si la
    acción devuelve exito = false, di el mensaje tal cual y no sigas.
 
-3. Para cada oportunidad redacta un correo de seguimiento (asunto y cuerpo, profesional y breve
-   (criterios)) y un próximo paso propuesto. Usa solo los datos que devolvió la acción. No
-   inventes conversaciones ni contactos: si no sabes algo, dilo.
+3. Para cada oportunidad, usa «Leer historial de una oportunidad» con maximoActividades = 5
+   (criterios) y redacta un correo de seguimiento (asunto y cuerpo, profesional y breve
+   (criterios)), dirigido al contacto principal si lo hay, y un próximo paso propuesto. Usa solo
+   los datos que devolvieron las acciones. No inventes conversaciones ni contactos: si no sabes
+   algo, dilo.
 
 4. Propón las acciones que encajan: el próximo paso de cada oportunidad, una tarea con
    vencimiento 2 días después de hoy (criterios) y, si la fecha de cierre está vencida, una
@@ -104,6 +106,7 @@ modelo) y añade la transición en el Agent Router. Las fechas quedan como `obje
 | Action Name | Clase | Etiqueta (`label`) | `require_user_confirmation` |
 |---|---|---|---|
 | `buscar_oportunidades_sin_actividad` | `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | `False` |
+| `leer_historial_oportunidad` | `AgentesLeerHistorialOportunidad` | Leer historial de una oportunidad | `False` |
 | `actualizar_proximo_paso` | `AgentesActualizarProximoPaso` | Actualizar próximo paso de una oportunidad | `True` |
 | `crear_tarea_seguimiento` | `AgentesCrearTareaSeguimiento` | Crear tarea de seguimiento en una oportunidad | `True` |
 | `mover_fecha_cierre` | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | `True` |
