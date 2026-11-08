@@ -137,6 +137,17 @@ desde el 2026-11-08 incluye `AgentesBuscarOportunidadesSinActividad`. El usuario
 (*agent user*) no recibe permisos de escritura: las acciones corren como el usuario de la
 conversación.
 
+## Activar y dar acceso
+
+1. En el Builder, **Commit Version** (congela la versión) y **Activate**.
+2. **Setup > Permission Sets > New** (por ejemplo `Asistente de Seguimiento - Acceso`). En **Apps > Agent
+   Access > Edit**, pasar **Asistente de Seguimiento** a *Enabled Agents*.
+3. Asignar ese Permission Set a los vendedores, junto con **Agentes CRM - Acciones**.
+4. Los vendedores abren el agente con el icono **Agentforce**, arriba a la derecha de la app Sales.
+
+Fuente: [Trailhead: Grant Access and Use the Agents](https://trailhead.salesforce.com/content/learn/projects/quick-start-create-employee-agents-in-agentforce/grant-access-and-use-the-agents).
+El 2026-11-08 la versión 1 quedó activa en la Developer Edition.
+
 ## Comprobado en la Developer Edition (2026-11-08)
 
 Pruebas en el Preview del Builder, modo **Live Test**, con Claude Sonnet 5.5 y verificadas en la org con
