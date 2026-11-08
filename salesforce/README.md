@@ -17,7 +17,7 @@ para ejecutar estas acciones, cada una con sus validaciones.
 | `AgentesActualizarProximoPaso` | Actualizar próximo paso de una oportunidad | Reemplaza `NextStep` de oportunidades abiertas | `ventas-seguimiento` |
 | `AgentesCrearTareaSeguimiento` | Crear tarea de seguimiento en una oportunidad | Crea una `Task` ligada a la oportunidad, asignada al usuario conectado | `ventas-seguimiento` |
 | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | Cambia `CloseDate` a hoy o una fecha posterior | `ventas-seguimiento` |
-| `AgentesLeerHistorialOportunidad` | Leer historial de una oportunidad | Solo lee: últimas N tareas y eventos de una oportunidad y su contacto principal | Agentforce |
+| `AgentesLeerHistorialOportunidad` | Leer historial de una oportunidad | Solo lee: etapa, monto, fecha de cierre y próximo paso de una oportunidad, sus últimas N tareas y eventos y su contacto principal | Agentforce |
 | `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | Solo lee: devuelve las oportunidades abiertas del usuario con N días o más sin actividad, de mayor a menor monto | Agentforce ([agentforce/](agentforce/seguimiento-oportunidades.md)) |
 
 La búsqueda y la lectura del historial son para el agente de Agentforce, que no tiene las herramientas de `sobject-reads`. En

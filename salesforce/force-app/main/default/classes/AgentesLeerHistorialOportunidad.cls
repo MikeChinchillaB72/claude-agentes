@@ -1,6 +1,8 @@
 /**
- * Acción para agentes: lee el historial reciente de una oportunidad (sus últimas tareas y
- * eventos) y su contacto principal. Es de solo lectura.
+ * Acción para agentes: lee el estado de una oportunidad (etapa, monto, fecha de cierre y próximo
+ * paso), su historial reciente (últimas tareas y eventos) y su contacto principal. Es de solo
+ * lectura. El estado sirve para mostrar el valor actual antes de proponer un cambio, también
+ * cuando el agente llega a la oportunidad sin pasar por la búsqueda.
  *
  * La usa el agente de Agentforce del plugin `ventas-seguimiento` para redactar correos y
  * próximos pasos con contexto. Equivale al paso 3 de la skill `seguimiento-oportunidades`, que
@@ -13,7 +15,8 @@
  * `AccessLevel.USER_MODE`. Si el usuario no puede leer la oportunidad o un campo, la acción
  * falla y lo dice.
  *
- * Todas las solicitudes se resuelven con una sola consulta: la oportunidad con tres subconsultas
+ * Todas las solicitudes se resuelven con una sola consulta: la oportunidad (con sus campos de
+ * estado) y tres subconsultas
  * (tareas, eventos y contacto principal). El `LIMIT` de una subconsulta se aplica a cada
  * oportunidad, así que se pide el máximo de todas las solicitudes y luego se recorta cada una.
  */
@@ -50,6 +53,21 @@ global with sharing class AgentesLeerHistorialOportunidad {
         @InvocableVariable(label='Nombre de la oportunidad' description='Nombre de la oportunidad.')
         global String nombreOportunidad;
 
+        @InvocableVariable(label='Etapa' description='Etapa actual de la oportunidad.')
+        global String etapa;
+
+        @InvocableVariable(label='Monto' description='Monto actual de la oportunidad.')
+        global Decimal monto;
+
+        @InvocableVariable(label='Fecha de cierre' description='Fecha de cierre actual de la oportunidad.')
+        global Date fechaCierre;
+
+        @InvocableVariable(label='Próximo paso' description='Próximo paso actual de la oportunidad (campo Next Step). Vacío si no tiene.')
+        global String proximoPaso;
+
+        @InvocableVariable(label='Cerrada' description='true si la oportunidad está cerrada; entonces las acciones que escriben no la modifican.')
+        global Boolean cerrada;
+
         @InvocableVariable(
             label='Tareas'
             description='Últimas tareas de la oportunidad, de la más reciente a la más antigua: asunto, fecha, estado y descripción.'
@@ -80,7 +98,7 @@ global with sharing class AgentesLeerHistorialOportunidad {
      */
     @InvocableMethod(
         label='Leer historial de una oportunidad'
-        description='Devuelve las últimas tareas y eventos de una oportunidad y su contacto principal (nombre, cargo y correo). Solo lee; no cambia nada. Úsala antes de redactar un correo de seguimiento o un próximo paso.'
+        description='Devuelve el estado actual de una oportunidad (etapa, monto, fecha de cierre y próximo paso), sus últimas tareas y eventos y su contacto principal (nombre, cargo y correo). Solo lee; no cambia nada. Úsala antes de redactar un correo de seguimiento o de proponer un cambio.'
         category='Agentes CRM'
     )
     global static List<Resultado> ejecutar(List<Solicitud> solicitudes) {
@@ -132,7 +150,7 @@ global with sharing class AgentesLeerHistorialOportunidad {
         // El límite de las subconsultas va como número en el texto: es un Integer ya validado,
         // no texto de fuera, así que no abre la puerta a inyección.
         String limite = String.valueOf(maximo);
-        String soql = 'SELECT Id, Name,' +
+        String soql = 'SELECT Id, Name, StageName, Amount, CloseDate, NextStep, IsClosed,' +
             ' (SELECT Id, Subject, ActivityDate, Status, Description FROM Tasks' +
             '  ORDER BY ActivityDate DESC NULLS LAST, CreatedDate DESC LIMIT ' + limite + '),' +
             ' (SELECT Id, Subject, ActivityDate, ActivityDateTime, Description FROM Events' +
@@ -150,6 +168,11 @@ global with sharing class AgentesLeerHistorialOportunidad {
 
     private static void completar(Resultado resultado, Opportunity oportunidad, Integer maximo) {
         resultado.nombreOportunidad = oportunidad.Name;
+        resultado.etapa = oportunidad.StageName;
+        resultado.monto = oportunidad.Amount;
+        resultado.fechaCierre = oportunidad.CloseDate;
+        resultado.proximoPaso = oportunidad.NextStep;
+        resultado.cerrada = oportunidad.IsClosed;
         resultado.tareas = (List<Task>) recortar(oportunidad.Tasks, maximo);
         resultado.eventos = (List<Event>) recortar(oportunidad.Events, maximo);
         if (!oportunidad.OpportunityContactRoles.isEmpty()) {

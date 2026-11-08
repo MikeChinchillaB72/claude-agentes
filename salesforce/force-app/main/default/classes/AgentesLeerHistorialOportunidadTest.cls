@@ -1,7 +1,7 @@
 /**
  * Pruebas de `AgentesLeerHistorialOportunidad`.
  *
- * Cubre el orden y el recorte de tareas y eventos, el contacto principal (y que no devuelva uno
+ * Cubre el estado de la oportunidad, el orden y el recorte de tareas y eventos, el contacto principal (y que no devuelva uno
  * que no es principal), una oportunidad sin historial, cada valor inválido (regla T2), un lote
  * de `AgentesTestDataFactory.CANTIDAD_MASIVA` solicitudes en una sola consulta y dos usuarios
  * con permisos mínimos (`System.runAs`).
@@ -81,6 +81,22 @@ private class AgentesLeerHistorialOportunidadTest {
     }
 
     @IsTest
+    static void devuelveElEstadoActualDeLaOportunidad() {
+        Opportunity abierta = AgentesTestDataFactory.primeraAbierta();
+        Test.startTest();
+        List<AgentesLeerHistorialOportunidad.Resultado> resultados = leer(
+            new List<AgentesLeerHistorialOportunidad.Solicitud>{ solicitud(abierta.Id, MAXIMO) }
+        );
+        Test.stopTest();
+        AgentesLeerHistorialOportunidad.Resultado resultado = resultados[0];
+        Assert.isTrue(resultado.exito, resultado.mensaje);
+        Assert.areEqual(AgentesTestDataFactory.PASO_INICIAL, resultado.proximoPaso);
+        Assert.areEqual(Date.today().addDays(-AgentesTestDataFactory.DIAS_VENCIDA), resultado.fechaCierre);
+        Assert.areEqual(AgentesTestDataFactory.etapaAbierta(), resultado.etapa);
+        Assert.isFalse(resultado.cerrada);
+    }
+
+    @IsTest
     static void cadaSolicitudRespetaSuPropioMaximo() {
         Id oportunidadId = AgentesTestDataFactory.primeraAbierta().Id;
         crearHistorial(oportunidadId);
@@ -123,6 +139,7 @@ private class AgentesLeerHistorialOportunidadTest {
         );
         Test.stopTest();
         Assert.isTrue(resultados[0].exito, 'Leer no modifica, así que una cerrada se puede leer.');
+        Assert.isTrue(resultados[0].cerrada, 'Avisa de que está cerrada.');
         Assert.areEqual(3, resultados[0].tareas.size());
     }
 
