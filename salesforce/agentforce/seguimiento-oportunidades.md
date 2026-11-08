@@ -1,7 +1,7 @@
 # Subagente «Seguimiento de oportunidades» para Agentforce
 
 > Actualizado: 2026-11-08. **Estado:** agente «Asistente de Seguimiento» creado en la Developer Edition
-> (plantilla Agentforce Employee Agent) y probado en **Live Test**: pasan P1, P6, P7, P8 y P9. Es la versión de Agentforce
+> (plantilla Agentforce Employee Agent) y probado en **Live Test**: pasan P1, P6, P7, P8, P9 y P11. Es la versión de Agentforce
 > de la skill [`seguimiento-oportunidades`](../../plugins/ventas-seguimiento/skills/seguimiento-oportunidades/SKILL.md)
 > del plugin `ventas-seguimiento`.
 
@@ -142,6 +142,7 @@ consultas de solo lectura:
 | P7 | Actualiza el próximo paso de Globex Implementación CRM tras la tarjeta **Confirm**; ningún otro registro cambia |
 | P8 | Crea la tarea `00Tfj00004I0JmDEAV` (vence el 2026-11-10) ligada a la oportunidad |
 | P9 | Mueve el cierre de Globex Capacitación al 2026-12-15 sin cambiar la etapa, y se niega a una fecha pasada sin cambiar nada |
+| P11 | Con **Cancel** en la tarjeta, la acción no se ejecuta («ejecución denegada») y la fecha sigue en 2026-12-15. El agente dice que desconoce el motivo y ofrece reintentar |
 
 Hallazgos:
 - **El Preview tiene un modo que simula las acciones.** En ese modo un modelo inventa la salida (Ids,
@@ -169,7 +170,7 @@ Comprobado en Live Test: la bienvenida sale en español.
 
 - Cómo queda el agente al activarlo y ponerlo a disposición de los vendedores (fuera del Preview).
 - Si el texto de la tarjeta de confirmación sale en español con el agente en español.
-- P10 y P11 (oportunidad cerrada y aprobación rechazada).
+- P10 (oportunidad cerrada).
 
 Se comprueban con las pruebas de
 [06-pruebas-de-aceptacion.md](../../plugins/ventas-seguimiento/docs/06-pruebas-de-aceptacion.md).
