@@ -31,6 +31,16 @@
   `AgentesLeerHistorialOportunidad` y las instrucciones 10 a 12 quedó activa el mismo día. La lectura con el estado de la oportunidad y la
   frase nueva de la 12 pasan en Live Test (19:09 UTC). Esa versión está activa y funciona en la consola.
   La tarjeta de confirmación sale en el idioma del usuario de Salesforce, no del agente. Falta P10.
+- **P16 · Agentes de servicio con conocimiento en Agentforce.** Preparado el 2026-11-08 en
+  [salesforce/agentforce/servicio-conocimiento.md](../salesforce/agentforce/servicio-conocimiento.md),
+  con la investigación en el Claude Doc
+  [Agentes avanzados de conocimiento para Service Cloud](https://claude.ai/artifact/UimtZf9wd5yd54R19WyLqY).
+  Esperan a Miguel: (1) activar Lightning Knowledge en la Developer Edition, que no se puede deshacer, y el
+  acceso a Data 360; (2) el orden de las fases; (3) un agente de servicio con varios subagentes o uno por
+  tema; (4) si el Service Agent para clientes por chat entra ahora. Después: correr los dos scripts de
+  datos de prueba, desplegar `AgentesLeerContextoCaso` y pasar las pruebas S1 a S9. La fase 3
+  (clasificación) espera además las categorías de la empresa (P1), y la fase 4 (borradores de artículo),
+  que exista `Knowledge__kav`.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 

@@ -1,15 +1,15 @@
 /**
- * Fábrica de datos de prueba de las acciones de `ventas-seguimiento`.
+ * Fábrica de datos de prueba de las acciones de los agentes de ventas y de servicio.
  *
  * Es el único sitio donde se crean los datos de las pruebas (regla T10): la cuenta, el
- * contacto, las oportunidades abiertas y la cerrada, y los dos usuarios con permisos
+ * contacto, las oportunidades abiertas y la cerrada, los casos y los dos usuarios con permisos
  * mínimos. Cada clase de prueba la llama desde su `@TestSetup`.
  *
  * No supone nada de la org:
  * - Las etapas se leen de `OpportunityStage` (la primera abierta y la primera cerrada).
  * - El perfil de los usuarios de prueba se busca por sus permisos, no por su nombre, porque
  *   los nombres de los perfiles estándar se traducen al idioma del usuario. Se elige un
- *   perfil de licencia Salesforce que no lee oportunidades, no crea tareas y no tiene
+ *   perfil de licencia Salesforce que no lee oportunidades ni casos, no crea tareas y no tiene
  *   «Ver todos los datos» ni «Modificar todos los datos» (en una org nueva es
  *   «Minimum Access - Salesforce»).
  */
@@ -37,10 +37,13 @@ public class AgentesTestDataFactory {
     /** Registros de las pruebas masivas: el tamaño de un lote de trigger. */
     public static final Integer CANTIDAD_MASIVA = 200;
 
-    /** Usuario que no puede leer oportunidades. */
+    /** Prefijo del asunto de los casos de prueba; le sigue un número de tres cifras. */
+    public static final String PREFIJO_CASO = 'PRUEBA-Caso-';
+
+    /** Usuario que no puede leer oportunidades ni casos. */
     public static final String APELLIDO_SIN_ACCESO = 'PRUEBA-SinAcceso';
 
-    /** Usuario que lee oportunidades pero no las edita ni crea tareas. */
+    /** Usuario que lee oportunidades y casos pero no los edita ni crea tareas. */
     public static final String APELLIDO_SOLO_LECTURA = 'PRUEBA-SoloLectura';
 
     /**
@@ -64,6 +67,55 @@ public class AgentesTestDataFactory {
         crearContacto(cuenta.Id);
         crearOportunidadesAbiertas(cuenta.Id, cantidadAbiertas);
         crearOportunidadCerrada(cuenta.Id);
+    }
+
+    /**
+     * Crea lo que usan las pruebas de servicio: los dos usuarios, una cuenta, un contacto y
+     * `cantidadCasos` casos abiertos de esa cuenta y ese contacto.
+     *
+     * @param cantidadCasos Casos que se crean.
+     */
+    public static void crearEscenarioServicio(Integer cantidadCasos) {
+        crearUsuarios();
+        Account cuenta = crearCuenta();
+        Contact contacto = crearContacto(cuenta.Id);
+        crearCasos(cuenta.Id, contacto.Id, cantidadCasos);
+    }
+
+    /**
+     * Crea casos con el estado y la prioridad por defecto de la org.
+     *
+     * @param cuentaId Cuenta de los casos; puede ser `null`.
+     * @param contactoId Contacto de los casos; puede ser `null`.
+     * @param cantidad Cuántos.
+     * @return Los casos, ya insertados, en orden de asunto.
+     */
+    public static List<Case> crearCasos(Id cuentaId, Id contactoId, Integer cantidad) {
+        List<Case> casos = new List<Case>();
+        for (Integer i = 0; i < cantidad; i++) {
+            casos.add(new Case(
+                Subject = PREFIJO_CASO + String.valueOf(i).leftPad(3, '0'),
+                Description = 'Descripción de prueba ' + i,
+                AccountId = cuentaId,
+                ContactId = contactoId
+            ));
+        }
+        insert casos;
+        return casos;
+    }
+
+    /** @return Los casos de prueba, en orden de asunto. */
+    public static List<Case> casos() {
+        return [
+            SELECT Id, Subject, CaseNumber FROM Case
+            WHERE Subject LIKE :(PREFIJO_CASO + '%')
+            ORDER BY Subject
+        ];
+    }
+
+    /** @return El `ApiName` del primer estado cerrado de caso de la org. */
+    public static String estadoCasoCerrado() {
+        return [SELECT ApiName FROM CaseStatus WHERE IsClosed = true ORDER BY SortOrder LIMIT 1].ApiName;
     }
 
     /** @return El `ApiName` de la primera etapa abierta y activa de la org. */
@@ -212,14 +264,14 @@ public class AgentesTestDataFactory {
                 AND PermissionsEditTask = false
                 AND Id NOT IN (
                     SELECT ParentId FROM ObjectPermissions
-                    WHERE SobjectType = 'Opportunity' AND PermissionsRead = true
+                    WHERE SobjectType IN ('Opportunity', 'Case') AND PermissionsRead = true
                 )
             ORDER BY Profile.Name
             LIMIT 1
         ];
         if (perfiles.isEmpty()) {
             throw new PerfilNoEncontradoException(
-                'La org no tiene un perfil de licencia Salesforce sin acceso a oportunidades ni a tareas ' +
+                'La org no tiene un perfil de licencia Salesforce sin acceso a oportunidades, casos ni tareas ' +
                 '(por ejemplo «Minimum Access - Salesforce»); las pruebas de permisos lo necesitan.'
             );
         }
@@ -235,6 +287,9 @@ public class AgentesTestDataFactory {
         // La lectura de oportunidades exige la de cuentas, así que va primero.
         insert new ObjectPermissions(ParentId = permisos.Id, SobjectType = 'Account', PermissionsRead = true);
         insert new ObjectPermissions(ParentId = permisos.Id, SobjectType = 'Opportunity', PermissionsRead = true);
+        // Contactos y casos, para las pruebas de servicio.
+        insert new ObjectPermissions(ParentId = permisos.Id, SobjectType = 'Contact', PermissionsRead = true);
+        insert new ObjectPermissions(ParentId = permisos.Id, SobjectType = 'Case', PermissionsRead = true);
         insert new FieldPermissions(
             ParentId = permisos.Id,
             SobjectType = 'Opportunity',
