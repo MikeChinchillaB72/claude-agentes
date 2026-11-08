@@ -8,7 +8,8 @@
 Este archivo trae el texto que se copia en **Agentforce Builder** al crear el subagente. Desde
 abril de 2026, Salesforce llama *subagentes* a lo que antes eran *topics*
 ([Agent Script Reference](https://developer.salesforce.com/docs/ai/agentforce/references/agent-script/agent-script-reference.html)).
-Cada sección de abajo es un campo del Builder.
+Cada sección de abajo es un campo del Builder. El orden de los pasos para crear el agente está en
+[crear-agente-paso-a-paso.md](crear-agente-paso-a-paso.md).
 
 ## Qué cambia frente al plugin
 

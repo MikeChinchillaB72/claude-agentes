@@ -108,7 +108,8 @@ La guía completa para el cliente está en [instalacion-salesforce.md](../docs/c
 
 El agente de Agentforce usa las mismas tres acciones más la búsqueda. Las instrucciones del subagente
 «Seguimiento de oportunidades», listas para copiar en Agentforce Builder, están en
-[agentforce/seguimiento-oportunidades.md](agentforce/seguimiento-oportunidades.md).
+[agentforce/seguimiento-oportunidades.md](agentforce/seguimiento-oportunidades.md). El orden para crear
+el agente en una org está en [agentforce/crear-agente-paso-a-paso.md](agentforce/crear-agente-paso-a-paso.md).
 
 Los nombres de clase Apex tienen como máximo 40 caracteres. Por eso la prueba de
 `AgentesBuscarOportunidadesSinActividad` se llama `AgentesBuscarOppSinActividadTest` y no `<Clase>Test`.
