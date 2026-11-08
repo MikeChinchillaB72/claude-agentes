@@ -29,8 +29,8 @@
   detalle en [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md)). El
   2026-11-08 Miguel decidió pasarlo a español y la bienvenida ya sale en español. La versión con
   `AgentesLeerHistorialOportunidad` y las instrucciones 10 a 12 quedó activa el mismo día. La lectura con el estado de la oportunidad y la
-  frase nueva de la 12 pasan en Live Test (19:09 UTC). Faltan: activar esa versión; ver si la
-  tarjeta de confirmación también sale en español y P10.
+  frase nueva de la 12 pasan en Live Test (19:09 UTC). Esa versión está activa y funciona en la consola.
+  La tarjeta de confirmación sale en el idioma del usuario de Salesforce, no del agente. Falta P10.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 
