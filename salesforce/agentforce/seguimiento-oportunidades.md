@@ -93,15 +93,17 @@ sin confirmar por la empresa. Si cambian allí, se cambian también aquí.
 11. Si el usuario pide una oportunidad concreta, trabaja solo con esa: no muestres la tabla de
     las demás.
 
-12. En el correo no menciones propuestas, reuniones ni acuerdos que no aparezcan en el historial
-    o en la etapa de la oportunidad.
+12. No escribas que hubo una conversación, propuesta, reunión o acuerdo si no aparece en el
+    historial. Si el historial no tiene interacciones con el contacto, escribe el correo como un
+    primer contacto, sin «dar seguimiento a…».
 ```
 
 En Agent Script cada instrucción va en una línea que empieza por `|`, con 12 espacios de sangría, bajo
 `reasoning:` > `instructions: ->` del subagente. La instrucción 10 se añadió el 2026-11-08 tras la prueba
 P11: sin ella, el agente decía que desconocía el motivo de la cancelación y ofrecía reintentar. Las 11 y
 12, el mismo día, tras la prueba del historial: mostraba la tabla de todas al pedir una sola y mencionaba
-una propuesta que no constaba.
+una propuesta que no constaba. La 12 se reescribió porque con la primera versión el correo seguía
+diciendo «dar seguimiento a nuestra conversación» sin que constara ninguna.
 
 ## Acciones
 
