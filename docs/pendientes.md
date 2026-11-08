@@ -24,13 +24,11 @@
   empresa tiene la suya. Mientras tanto, las guías piden añadir un conector personalizado con la URL de
   Setup y dejar sin conectar el conector `salesforce` del plugin. Falta que Miguel decida qué hacer con el
   `.mcp.json` (Claude se lo propone).
-- **P15 · Agente de Agentforce para `ventas-seguimiento`.** El 2026-11-08 se añadieron la acción
-  `AgentesBuscarOportunidadesSinActividad` (con su prueba) y las instrucciones del subagente en
-  [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md). La clase y su prueba
-  pasan en la Developer Edition (10 de 10, 2026-11-08). Faltan: que Miguel termine el agente «Asistente de Seguimiento» (creado el
-  2026-11-08 con la plantilla Agentforce Employee Agent y Claude Sonnet 5.5 en `model_config`) y corra P1 y P6 a P9. Sin comprobar: cómo pide la confirmación
-  `require_user_confirmation`, con qué usuario corren las acciones y cómo muestra el
-  agente la lista de oportunidades. Tampoco hay todavía una acción para leer el historial (tareas y
+- **P15 · Agente de Agentforce para `ventas-seguimiento`.** El agente «Asistente de Seguimiento» está
+  creado en la Developer Edition con Claude Sonnet 5.5 y pasa P1 y P6 a P9 en Live Test (2026-11-08,
+  detalle en [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md)). Faltan:
+  decidir el idioma del agente (Miguel; hoy `en_US`, con la bienvenida y la tarjeta de confirmación en
+  inglés), activarlo y probarlo fuera del Preview, P10 y P11, y una acción para leer el historial (tareas y
   eventos) de cada oportunidad, que el plugin sí lee.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.

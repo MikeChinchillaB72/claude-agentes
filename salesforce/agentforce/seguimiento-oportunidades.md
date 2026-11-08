@@ -1,7 +1,7 @@
 # Subagente «Seguimiento de oportunidades» para Agentforce
 
 > Actualizado: 2026-11-08. **Estado:** agente «Asistente de Seguimiento» creado en la Developer Edition
-> (plantilla Agentforce Employee Agent); sin probar todavía. Es la versión de Agentforce
+> (plantilla Agentforce Employee Agent) y probado en **Live Test**: pasan P1, P6, P7, P8 y P9. Es la versión de Agentforce
 > de la skill [`seguimiento-oportunidades`](../../plugins/ventas-seguimiento/skills/seguimiento-oportunidades/SKILL.md)
 > del plugin `ventas-seguimiento`.
 
@@ -130,13 +130,34 @@ desde el 2026-11-08 incluye `AgentesBuscarOportunidadesSinActividad`. El usuario
 (*agent user*) no recibe permisos de escritura: las acciones corren como el usuario de la
 conversación.
 
+## Comprobado en la Developer Edition (2026-11-08)
+
+Pruebas en el Preview del Builder, modo **Live Test**, con Claude Sonnet 5.5 y verificadas en la org con
+consultas de solo lectura:
+
+| Prueba | Resultado |
+|---|---|
+| P1 | Devuelve las 5 oportunidades PRUEBA- con 7 días o más sin actividad y dice, bien, que ninguna está vencida. Propone acciones y pregunta antes de ejecutar |
+| P6 | Ante «no, no apliques nada» no ejecuta ninguna acción: 0 oportunidades modificadas y 0 tareas |
+| P7 | Actualiza el próximo paso de Globex Implementación CRM tras la tarjeta **Confirm**; ningún otro registro cambia |
+| P8 | Crea la tarea `00Tfj00004I0JmDEAV` (vence el 2026-11-10) ligada a la oportunidad |
+| P9 | Mueve el cierre de Globex Capacitación al 2026-12-15 sin cambiar la etapa, y se niega a una fecha pasada sin cambiar nada |
+
+Hallazgos:
+- **El Preview tiene un modo que simula las acciones.** En ese modo un modelo inventa la salida (Ids,
+  nombres y fechas que no existen) y la acción no corre en la org. Las pruebas se hacen en **Live Test**.
+  Se reconoce porque el mensaje de la acción no es el de la clase.
+- **Las acciones corren con el usuario de la conversación.** Los cambios figuran como hechos por él
+  (`LastModifiedBy`), así que se respetan sus permisos y su compartición.
+- **`require_user_confirmation: True` muestra una tarjeta Confirm / Cancel** con los valores exactos antes
+  de ejecutar. En una acción sin la línea también aparece, así que en la búsqueda hay que poner `False`.
+- El texto de la tarjeta lo genera Salesforce en el idioma del agente (`en_US` por defecto).
+
 ## Sin comprobar
 
-- Si las acciones corren con los permisos del usuario de la conversación o con los del *agent
-  user*. Las clases son `with sharing` y usan `USER_MODE`, así que respetan los permisos de quien
-  las ejecute, pero quién es ese usuario lo decide Agentforce.
-- Cómo muestra el agente la lista de oportunidades (`List<Opportunity>`) que devuelve la búsqueda.
-- Cómo pide la confirmación `require_user_confirmation: True` en la conversación.
+- Cómo queda el agente al activarlo y ponerlo a disposición de los vendedores (fuera del Preview).
+- El idioma: los mensajes del sistema y de la tarjeta siguen en inglés mientras el agente esté en `en_US`.
+- P10 y P11 (oportunidad cerrada y aprobación rechazada).
 
-Se comprueban con las pruebas P1 y P6 a P9 de
+Se comprueban con las pruebas de
 [06-pruebas-de-aceptacion.md](../../plugins/ventas-seguimiento/docs/06-pruebas-de-aceptacion.md).
