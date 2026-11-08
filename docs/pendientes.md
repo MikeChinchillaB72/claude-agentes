@@ -24,6 +24,14 @@
   empresa tiene la suya. Mientras tanto, las guías piden añadir un conector personalizado con la URL de
   Setup y dejar sin conectar el conector `salesforce` del plugin. Falta que Miguel decida qué hacer con el
   `.mcp.json` (Claude se lo propone).
+- **P15 · Agente de Agentforce para `ventas-seguimiento`.** El 2026-11-08 se añadieron la acción
+  `AgentesBuscarOportunidadesSinActividad` (con su prueba) y las instrucciones del subagente en
+  [salesforce/agentforce/](../salesforce/agentforce/seguimiento-oportunidades.md). Faltan: que Miguel
+  despliegue la clase y su prueba en la Developer Edition, cree el agente en Agentforce Builder con Claude
+  como modelo (confirmar el nombre exacto del modelo) y corra P1 y P6 a P9. Sin comprobar: si existe
+  **Require User Confirmation** en el Builder nuevo, con qué usuario corren las acciones y cómo muestra el
+  agente la lista de oportunidades. Tampoco hay todavía una acción para leer el historial (tareas y
+  eventos) de cada oportunidad, que el plugin sí lee.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 
@@ -49,7 +57,8 @@
   el servidor `AgentesCRM` publica cada acción con el nombre de su clase, claude.ai las agrupa como
   *Write/delete tools*, y pasan las pruebas P6 a P9 y P13 de `ventas-seguimiento`. Falta: la URL en un
   sandbox, las pruebas P10 a P12 (P11 no se completó: en un cambio no apareció la ventana de aprobación y
-  no se investigó) y quitar del Permission Set de la Developer Edition las seis clases que no son acciones. En monday.com, comprobar que una app con `boards:write` y las
+  no se investigó) y quitar del Permission Set de la Developer Edition las seis clases que no son acciones
+  (desde el 2026-11-08 son cuatro acciones: se suma `AgentesBuscarOportunidadesSinActividad`). En monday.com, comprobar que una app con `boards:write` y las
   herramientas sobrantes en *Never* no puede hacer más que las tres acciones.
 - **P3 · Dependencias sin fijar.** ESTANDARES.md (sección 2, regla 10) pide versiones fijadas
   y `pyproject.toml` usa rangos (`>=`). Falta un archivo de bloqueo. Venía de antes del 2026-11-06.

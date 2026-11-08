@@ -1,7 +1,8 @@
 # Acciones de Salesforce para los plugins
 
-> Actualizado: 2026-11-07. **Estado:** sintaxis comprobada con un analizador de Apex; **sin
-> compilar ni probar en una org** (P10 en [pendientes](../docs/pendientes.md)).
+> Actualizado: 2026-11-08. **Estado:** las tres acciones que escriben están probadas en la Developer
+> Edition (sección «Comprobado»). `AgentesBuscarOportunidadesSinActividad` tiene la sintaxis comprobada
+> con un analizador de Apex y está **sin compilar en una org** (P15 en [pendientes](../docs/pendientes.md)).
 
 Proyecto de Salesforce con las acciones que los plugins de Claude pueden ejecutar en el CRM. Cada
 acción es una clase Apex `@InvocableMethod` que se publica como herramienta de un **servidor MCP
@@ -16,6 +17,11 @@ para ejecutar estas acciones, cada una con sus validaciones.
 | `AgentesActualizarProximoPaso` | Actualizar próximo paso de una oportunidad | Reemplaza `NextStep` de oportunidades abiertas | `ventas-seguimiento` |
 | `AgentesCrearTareaSeguimiento` | Crear tarea de seguimiento en una oportunidad | Crea una `Task` ligada a la oportunidad, asignada al usuario conectado | `ventas-seguimiento` |
 | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | Cambia `CloseDate` a hoy o una fecha posterior | `ventas-seguimiento` |
+| `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | Solo lee: devuelve las oportunidades abiertas del usuario con N días o más sin actividad, de mayor a menor monto | Agentforce ([agentforce/](agentforce/seguimiento-oportunidades.md)) |
+
+La búsqueda es para el agente de Agentforce, que no tiene las herramientas de `sobject-reads`. En
+claude.ai no hace falta añadirla al servidor `AgentesCRM`: el plugin ya busca con `sobject-reads`. Los
+días, el máximo y el monto mínimo llegan en cada llamada; no están en la clase (regla M7).
 
 `AgentesCrmAcciones` guarda las reglas comunes (regla T10).
 
@@ -30,6 +36,7 @@ Cada clase tiene su clase de prueba, como pide Salesforce
 | `AgentesActualizarProximoPaso` | `AgentesActualizarProximoPasoTest` |
 | `AgentesCrearTareaSeguimiento` | `AgentesCrearTareaSeguimientoTest` |
 | `AgentesMoverFechaCierre` | `AgentesMoverFechaCierreTest` |
+| `AgentesBuscarOportunidadesSinActividad` | `AgentesBuscarOportunidadesSinActividadTest` |
 
 Los datos los crea una sola fábrica, `AgentesTestDataFactory` (`@IsTest`). Cada clase de prueba:
 
@@ -37,8 +44,9 @@ Los datos los crea una sola fábrica, `AgentesTestDataFactory` (`@IsTest`). Cada
   comprueba que el registro no cambió.
 - Corre un lote de 200 registros (el tamaño de un lote de trigger) en una sola llamada.
 - Corre la acción con `System.runAs` como dos usuarios con permisos mínimos: uno que no lee
-  oportunidades y otro que solo las lee (con un Permission Set creado en la prueba). Las dos deben
-  fallar sin cambiar nada, sea cual sea la compartición de la org.
+  oportunidades y otro que solo las lee (con un Permission Set creado en la prueba). En las acciones
+  que escriben, las dos deben fallar sin cambiar nada, sea cual sea la compartición de la org. En la
+  búsqueda, ninguno de los dos recibe oportunidades de otro usuario.
 - Usa `Test.startTest()`/`Test.stopTest()` en cada prueba y la clase `Assert`.
 
 El perfil de los usuarios de prueba se busca por sus permisos, no por su nombre, porque Salesforce traduce
@@ -50,9 +58,12 @@ los nombres de los perfiles estándar al idioma del usuario. En una org nueva, l
 - **Permisos del usuario:** las clases son `with sharing` y consultan y guardan en
   `AccessLevel.USER_MODE`, así que respetan compartición, permisos de objeto y de campo
   ([Salesforce Developers](https://developer.salesforce.com/blogs/2026/05/expose-custom-apex-as-a-hosted-mcp-tool-for-agents)).
-- **Solo oportunidades abiertas.** Una cerrada no se modifica.
+- **Solo oportunidades abiertas.** Una cerrada no se modifica ni sale en la búsqueda.
 - **Ninguna fecha pasada.** Las fechas se comparan con el día del usuario.
 - **Nada se borra.** Ninguna acción elimina registros.
+- **La búsqueda solo lee** y solo devuelve oportunidades del usuario conectado. Usa una consulta por
+  solicitud, porque cada solicitud trae sus propios filtros y su límite; si un flujo manda más
+  solicitudes de las consultas que quedan, las sobrantes vuelven con error.
 - **Cada solicitud por separado:** si una falla, las demás siguen, y el resultado dice cuál falló y por qué.
 - **El SOQL no recibe texto de fuera:** los campos de la consulta salen de una lista fija.
 
@@ -62,12 +73,12 @@ Con [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli), desd
 
 ```bash
 sf org login web --alias agentes-crm
-sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest
+sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOportunidadesSinActividadTest
 ```
 
 En producción, Salesforce exige que las pruebas pasen y cubran al menos el 75 % del Apex.
 
-Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las cuatro clases de prueba
+Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las cinco clases de prueba
 (**File > New > Apex Class**), y correrlas con **Test > New Run**. La cobertura de cada clase sale en la
 pestaña **Tests** y en **Overall Code Coverage**.
 
@@ -88,6 +99,12 @@ En **Setup > MCP Servers > Salesforce Servers > Create Salesforce MCP Server**
    del plugin. Solo da acceso a las clases; lo que pueden editar lo deciden sus otros permisos.
 
 La guía completa para el cliente está en [instalacion-salesforce.md](../docs/cliente/instalacion-salesforce.md).
+
+## Agentforce
+
+El agente de Agentforce usa las mismas tres acciones más la búsqueda. Las instrucciones del subagente
+«Seguimiento de oportunidades», listas para copiar en Agentforce Builder, están en
+[agentforce/seguimiento-oportunidades.md](agentforce/seguimiento-oportunidades.md).
 
 ## Las descripciones son instrucciones para Claude
 
