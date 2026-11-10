@@ -20,7 +20,7 @@ para ejecutar estas acciones, cada una con sus validaciones.
 | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | Cambia `CloseDate` a hoy o una fecha posterior | `ventas-seguimiento` |
 | `AgentesLeerHistorialOportunidad` | Leer historial de una oportunidad | Solo lee: etapa, monto, fecha de cierre y próximo paso de una oportunidad, sus últimas N tareas y eventos y su contacto principal | Agentforce |
 | `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | Solo lee: devuelve las oportunidades abiertas del usuario con N días o más sin actividad, de mayor a menor monto | Agentforce ([agentforce/](agentforce/seguimiento-oportunidades.md)) |
-| `AgentesLeerContextoCaso` | Leer contexto de un caso | Solo lee: el caso, el nombre de su contacto y de su cuenta, sus últimos N comentarios y los otros N casos de la misma cuenta. Sin correo ni teléfono del contacto. Sin probar en la org | Agentforce de servicio ([agentforce/](agentforce/servicio-conocimiento.md)) |
+| `AgentesLeerContextoCaso` | Leer contexto de un caso | Solo lee: el caso, el nombre de su contacto y de su cuenta, sus últimos N comentarios y los otros N casos de la misma cuenta. Sin correo ni teléfono del contacto. Probada en la org el 2026-11-10 (8 de 8 pruebas y Live Test) | Agentforce de servicio ([agentforce/](agentforce/servicio-conocimiento.md)) |
 
 La búsqueda y la lectura del historial son para el agente de Agentforce, que no tiene las herramientas de `sobject-reads`. En
 claude.ai no hace falta añadirla al servidor `AgentesCRM`: el plugin ya busca con `sobject-reads`. Los
