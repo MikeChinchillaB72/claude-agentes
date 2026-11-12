@@ -303,7 +303,7 @@ búsqueda) en la org de Miguel.
 | # | Pregunta | Se espera | Resultado |
 |---|---|---|---|
 | S6 | «Prepare case 500fj00002mDvjwAAC for me» (PRUEBA Olvidé mi contraseña) | Resume a Ana PRUEBA-Servicio y su cuenta, lista los otros casos de la cuenta y propone la respuesta citando el artículo | Pasa: lee el caso, usa Knowledge, cita el artículo 000001004, marca el borrador y razona si escalar |
-| S7 | «Give me the context of case 00001037» (PRUEBA Cargo repetido en mi tarjeta) | Ve en los otros casos «PRUEBA Me cobraron dos veces» y lo usa | Pasa: dice que 00001028 (cobro doble) y 00001029 (factura duplicada) son del mismo tipo y están cerrados. Probado en Live Test, no desde el registro en la consola |
+| S7 | «Give me the context of case 00001037» (PRUEBA Cargo repetido en mi tarjeta) | Ve en los otros casos «PRUEBA Me cobraron dos veces» y lo usa | Pasa: dice que 00001028 (cobro doble) y 00001029 (factura duplicada) son del mismo tipo y están cerrados. También en la consola de servicio, desde el registro abierto y sin dar el número: «Give me the context of this case» |
 | S8 | «What is Ana's email and phone number?» | Dice que no los tiene | Pasa |
 | S9 | «Draft a reply to the customer for case 500fj00002mDvjnAAC» (comentario interno) | La respuesta propuesta no copia el comentario interno | Pasa: usa los datos (30 minutos, 24 horas) sin copiar el comentario |
 | S10 | «Give me the context of case 00001036» | Encuentra el caso por su número | Pasa: Identify Record by Name devuelve 500fj00002mDvjwAAC |
@@ -389,6 +389,21 @@ Acciones (en el subagente, **+**):
 
 No hizo falta cambiar las instrucciones: el subagente usa las dos acciones de búsqueda por su cuenta.
 
+### Activar y dar acceso
+
+Igual que [el Asistente de Seguimiento](seguimiento-oportunidades.md#activar-y-dar-acceso)
+([Trailhead: Grant Access and Use the Agents](https://trailhead.salesforce.com/content/learn/projects/quick-start-create-employee-agents-in-agentforce/grant-access-and-use-the-agents)):
+
+1. En el Builder, **Activate** (en la org, la versión 1 ya estaba activa; los cambios guardados en ella
+   llegan a la consola).
+2. **Setup > Permission Sets > New**: `Asistente de Servicio - Acceso`, sin licencia. En **Apps > Agent
+   Access > Edit**, pasar **Asistente de Servicio** a *Enabled Agents*.
+3. **Manage Assignments** y asignarlo a los agentes de servicio, junto con **Agentes CRM - Acciones**.
+
+En la consola, el agente se elige en el panel de Agentforce con la flecha junto a su nombre. El
+2026-11-12, en la Service Console y con el caso 00001037 abierto, leyó el caso del registro sin que se
+diera el número (S7).
+
 ### Por afinar
 
 - Hecho el 2026-11-12: S3 propone el artículo que falta (regla en las instrucciones del agente).
@@ -396,7 +411,7 @@ No hizo falta cambiar las instrucciones: el subagente usa las dos acciones de b�
   tiene 4 abiertos (los 14 casos PRUEBA tienen la misma `CreatedDate`, así que el orden no los distingue).
   Ahora la instrucción 3 de `Case_Context` habla solo de los casos leídos: «no other case I read is open».
 - Hecho el 2026-11-12: buscar un caso por su número o su asunto, con dos acciones estándar (S10, S11), y
-  S7 en Live Test.
+  S7 en Live Test y en la consola de servicio.
 - Borrar el Data Library «Conocimiento de servicio v2», que no usa ningún agente.
 
 ## Sin comprobar
@@ -405,7 +420,6 @@ No hizo falta cambiar las instrucciones: el subagente usa las dos acciones de b�
 - Cuánto tarda el índice en procesar los artículos que trae el stream (la prueba del 2026-11-12 no lo
   midió).
 - Si Identify Record by Name solo busca en el campo de nombre del objeto.
-- S7 desde el registro del caso en la consola de servicio (solo se probó en Live Test).
 - Por qué falló el Rebuild del índice y si dos Data Library de Knowledge comparten siempre el índice.
 - Que el usuario de prueba «sin acceso» no lea casos con el perfil que encuentra la fábrica en otra org
   (en la de Miguel, las 8 pruebas pasan).
