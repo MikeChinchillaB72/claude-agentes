@@ -134,6 +134,24 @@ Según el [workshop de Agentforce](https://developer.salesforce.com/workshops/ag
 > Data Explorer (columna Description = `Summary`) y el DMO `…_chunk__dlm`. No está documentado por qué
 > falló el Rebuild ni si los dos Data Library comparten siempre el índice.
 
+### Artículos nuevos: llegan solos
+
+Probado el 2026-11-12: un artículo publicado en Knowledge llega al agente sin tocar Data Cloud.
+
+1. Se crearon y publicaron 5 artículos en inglés con el prefijo `TEST` (000001005 a 000001009, en_US) con
+   un script de Apex anónimo. El script está en los archivos del proyecto, no en el repo.
+2. El data stream `Knowledge_kav_Home` los trajo solo en su siguiente ejecución, unos 7 minutos después
+   (Total Records pasó de 5 a 10).
+3. El índice hizo una corrida nueva por su cuenta: Process History muestra 5 registros procesados, 10
+   fragmentos creados, 0 borrados y SUCCEEDED. Es incremental: procesó solo los artículos nuevos, sin
+   Rebuild.
+4. En Live Test, «How long does the password reset link last?» respondió con los datos del artículo
+   «TEST Reset your portal password» (24 horas, cinco intentos, bloqueo de 30 minutos).
+
+No se sabe cuánto esperó el índice tras el stream: no está confirmado en qué zona horaria muestra
+Process History sus fechas. Para comprobar un artículo nuevo, mirar en ese orden el stream (Total
+Records), el índice (una corrida nueva con Chunks Created mayor que 0) y Live Test.
+
 Buenas prácticas que se aplican desde el principio
 ([Agentforce and RAG](https://www.salesforce.com/agentforce/agentforce-and-rag/)): un tema por
 artículo, indexar solo campos largos de texto libre y no indexar a la vez campos que se repiten.
@@ -354,6 +372,8 @@ Acciones (en el subagente, **+**):
 ## Sin comprobar
 
 - Cuántos créditos de Data 360 incluye la Developer Edition y cuántos gasta cada búsqueda.
+- Cuánto tarda el índice en procesar los artículos que trae el stream (la prueba del 2026-11-12 no lo
+  midió).
 - Por qué falló el Rebuild del índice y si dos Data Library de Knowledge comparten siempre el índice.
 - Que el usuario de prueba «sin acceso» no lea casos con el perfil que encuentra la fábrica en otra org
   (en la de Miguel, las 8 pruebas pasan).
