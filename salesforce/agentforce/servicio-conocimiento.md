@@ -412,7 +412,9 @@ diera el número (S7).
   Ahora la instrucción 3 de `Case_Context` habla solo de los casos leídos: «no other case I read is open».
 - Hecho el 2026-11-12: buscar un caso por su número o su asunto, con dos acciones estándar (S10, S11), y
   S7 en Live Test y en la consola de servicio.
-- Borrar el Data Library «Conocimiento de servicio v2», que no usa ningún agente.
+- Decidido el 2026-11-12: el Data Library «Conocimiento de servicio v2» se queda aunque no lo use
+  ningún agente. Borrarlo no hace falta y podría llevarse el índice, que parece compartido con el de
+  «Base de conocimiento de servicio».
 
 ## Sin comprobar
 
