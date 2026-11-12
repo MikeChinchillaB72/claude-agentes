@@ -36,11 +36,10 @@
   con la investigación en el Claude Doc
   [Agentes avanzados de conocimiento para Service Cloud](https://claude.ai/artifact/UimtZf9wd5yd54R19WyLqY).
   Las fases 0, 1 y 2 están hechas y probadas en la Developer Edition el 2026-11-09 y 10, con el agente
-  «Asistente de Servicio» ([bitácora](cambios_2026-11-10.md)). Falta: (1) que S3 proponga escribir el
-  artículo que falta en vez de ofrecer un agente humano; (2) que la tabla de otros casos no afirme nada
-  sobre los casos que no leyó; (3) buscar un caso por su asunto o número y probar S7 desde el registro;
-  (4) borrar el Data Library «Conocimiento de servicio v2», que no usa nadie; (5) decidir si el Service
-  Agent para clientes por chat entra ahora. La fase 3 (clasificación) espera las categorías de la
+  «Asistente de Servicio» ([bitácora](cambios_2026-11-10.md)). El 2026-11-12 se afinaron S3 y la tabla
+  de otros casos ([bitácora](cambios_2026-11-12.md)). Falta: (1) buscar un caso por su asunto o número y
+  probar S7 desde el registro; (2) borrar el Data Library «Conocimiento de servicio v2», que no usa nadie;
+  (3) decidir si el Service Agent para clientes por chat entra ahora. La fase 3 (clasificación) espera las categorías de la
   empresa (P1), y la fase 4 (borradores de artículo) está sin empezar.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
