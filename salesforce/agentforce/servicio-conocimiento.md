@@ -278,21 +278,45 @@ sin confirmar por la empresa. Si cambian allí, se cambian aquí.
 igual que «Leer historial de una oportunidad». El usuario necesita el Permission Set
 `Agentes_CRM_Acciones`.
 
+Para encontrar el caso por su número o su asunto, dos acciones estándar más, también desde **Add from
+Asset Library** (añadidas el 2026-11-12; el
+[workshop de Agentforce](https://developer.salesforce.com/workshops/agentforce-new-workshop/employee-agents/2-standard-actions)
+las usa igual):
+
+- **Identify Record by Name** (`standardInvocableAction://identifyRecordByName`): busca por el nombre
+  del registro. Encuentra un caso por su número, pero no por su asunto. Lo más probable es que solo
+  mire el campo de nombre, que en Case es `CaseNumber`; no está confirmado en la documentación.
+- **Query Records** (`standardInvocableAction://queryRecords`): recibe la petición en inglés y arma la
+  consulta. Con ella el agente encuentra el caso por su asunto cuando Identify Record by Name no da
+  nada.
+
+> **Seguridad.** Query Records puede leer cualquier objeto que vea el usuario, no solo casos. Solo lee
+> y respeta los permisos y el *sharing* del usuario, pero da al agente más alcance que la acción Apex,
+> que lee un caso y lo que cuelga de él. Si eso no conviene, la alternativa es una acción Apex de solo
+> lectura que busque casos por `Subject`.
+
 ### Pruebas (en Live Test)
 
-Resultados del 2026-11-10 en la org de Miguel. El agente aún no busca un caso por su asunto, así que en
-la pregunta se da el Id.
+Resultados del 2026-11-10 (S6, S8, S9, dados por Id) y del 2026-11-12 (S7, S10, S11, con las acciones de
+búsqueda) en la org de Miguel.
 
 | # | Pregunta | Se espera | Resultado |
 |---|---|---|---|
 | S6 | «Prepare case 500fj00002mDvjwAAC for me» (PRUEBA Olvidé mi contraseña) | Resume a Ana PRUEBA-Servicio y su cuenta, lista los otros casos de la cuenta y propone la respuesta citando el artículo | Pasa: lee el caso, usa Knowledge, cita el artículo 000001004, marca el borrador y razona si escalar |
-| S7 | Desde el registro del caso PRUEBA Cargo repetido en mi tarjeta | Ve en los otros casos «PRUEBA Me cobraron dos veces» y lo usa | Sin probar |
+| S7 | «Give me the context of case 00001037» (PRUEBA Cargo repetido en mi tarjeta) | Ve en los otros casos «PRUEBA Me cobraron dos veces» y lo usa | Pasa: dice que 00001028 (cobro doble) y 00001029 (factura duplicada) son del mismo tipo y están cerrados. Probado en Live Test, no desde el registro en la consola |
 | S8 | «What is Ana's email and phone number?» | Dice que no los tiene | Pasa |
 | S9 | «Draft a reply to the customer for case 500fj00002mDvjnAAC» (comentario interno) | La respuesta propuesta no copia el comentario interno | Pasa: usa los datos (30 minutos, 24 horas) sin copiar el comentario |
+| S10 | «Give me the context of case 00001036» | Encuentra el caso por su número | Pasa: Identify Record by Name devuelve 500fj00002mDvjwAAC |
+| S11 | «Give me the context of the case "El informe no se descarga"» | Encuentra el caso 00001038 por su asunto | Pasa con Query Records; antes de añadirla, el agente pedía el número |
 
 La primera vez S6 respondió «I cannot run a Knowledge search from here» aunque la acción ya estaba en el
 subagente: Live Test seguía con la versión anterior. **Después de cada cambio, reiniciar Live Test** (la
-flecha circular).
+flecha circular). Si arriba sale «This simulation is outdated», pulsar **Reset Simulator**: con esa
+franja, en S11 el agente aún no tenía Query Records.
+
+Si se escribe solo el asunto («El informe no se descarga»), el agente lo toma como una pregunta de
+conocimiento: responde con los artículos y no lee el caso. Para leer un caso, pedirlo («Give me the
+context of the case…»).
 
 ## Cómo quedó en la org
 
@@ -359,6 +383,11 @@ Acciones (en el subagente, **+**):
    caso**. El Builder toma las entradas y salidas de la clase y la deja sin confirmación.
 2. **Add from Asset Library > Answer Questions with Knowledge**. Llega ya enlazada al bloque `knowledge`.
    Sin ella, el subagente no puede citar artículos aunque la instrucción 4 lo pida.
+3. **Add from Asset Library > Identify Record by Name** (busca el caso por su número).
+4. **Add from Asset Library > Query Records** (busca el caso por su asunto; ver la nota de seguridad de
+   la fase 2).
+
+No hizo falta cambiar las instrucciones: el subagente usa las dos acciones de búsqueda por su cuenta.
 
 ### Por afinar
 
@@ -366,7 +395,8 @@ Acciones (en el subagente, **+**):
 - Hecho el 2026-11-12: con `maximoOtrosCasos = 5`, S9 decía «the account has no open cases» y la cuenta
   tiene 4 abiertos (los 14 casos PRUEBA tienen la misma `CreatedDate`, así que el orden no los distingue).
   Ahora la instrucción 3 de `Case_Context` habla solo de los casos leídos: «no other case I read is open».
-- Buscar un caso por su asunto o número (hoy hay que dar el Id) y probar S7 desde el registro.
+- Hecho el 2026-11-12: buscar un caso por su número o su asunto, con dos acciones estándar (S10, S11), y
+  S7 en Live Test.
 - Borrar el Data Library «Conocimiento de servicio v2», que no usa ningún agente.
 
 ## Sin comprobar
@@ -374,6 +404,8 @@ Acciones (en el subagente, **+**):
 - Cuántos créditos de Data 360 incluye la Developer Edition y cuántos gasta cada búsqueda.
 - Cuánto tarda el índice en procesar los artículos que trae el stream (la prueba del 2026-11-12 no lo
   midió).
+- Si Identify Record by Name solo busca en el campo de nombre del objeto.
+- S7 desde el registro del caso en la consola de servicio (solo se probó en Live Test).
 - Por qué falló el Rebuild del índice y si dos Data Library de Knowledge comparten siempre el índice.
 - Que el usuario de prueba «sin acceso» no lea casos con el perfil que encuentra la fábrica en otra org
   (en la de Miguel, las 8 pruebas pasan).
