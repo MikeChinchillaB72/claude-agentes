@@ -31,6 +31,20 @@
   `AgentesLeerHistorialOportunidad` y las instrucciones 10 a 12 quedó activa el mismo día. La lectura con el estado de la oportunidad y la
   frase nueva de la 12 pasan en Live Test (19:09 UTC). Esa versión está activa y funciona en la consola.
   La tarjeta de confirmación sale en el idioma del usuario de Salesforce, no del agente. Falta P10.
+- **P16 · Agentes de servicio con conocimiento en Agentforce.** Guía en
+  [salesforce/agentforce/servicio-conocimiento.md](../salesforce/agentforce/servicio-conocimiento.md),
+  con la investigación en el Claude Doc
+  [Agentes avanzados de conocimiento para Service Cloud](https://claude.ai/artifact/UimtZf9wd5yd54R19WyLqY).
+  Las fases 0, 1 y 2 están hechas y probadas en la Developer Edition el 2026-11-09 y 10, con el agente
+  «Asistente de Servicio» ([bitácora](cambios_2026-11-10.md)). El 2026-11-12 se afinaron S3 y la tabla
+  de otros casos y se comprobó que un artículo nuevo llega solo al agente ([bitácora](cambios_2026-11-12.md)). Ese día también se añadió la búsqueda de un
+  caso por número o asunto, con acciones estándar, y el agente quedó disponible en la consola de servicio.
+  Decisiones de Miguel del 2026-11-12: el Data Library «Conocimiento de servicio v2» se queda (borrarlo
+  no hace falta y podría llevarse el índice compartido), y el Service Agent para clientes queda fuera:
+  estas pruebas son para entender Agentforce. Falta la fase 3 (clasificación), que espera las categorías
+  de la empresa (P1). La fase 4 (borradores de artículo) tiene su acción `AgentesCrearBorradorArticulo` escrita
+  el 2026-11-14 ([bitácora](cambios_2026-11-14.md)); falta desplegarla en la org, crear el subagente
+  `Article_Drafts` y probar S12 a S15.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 

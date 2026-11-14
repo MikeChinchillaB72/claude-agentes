@@ -1,8 +1,10 @@
 # Acciones de Salesforce para los plugins
 
-> Actualizado: 2026-11-08. **Estado:** las cuatro clases compilan y sus pruebas pasan en la Developer
-> Edition. Las tres que escriben están probadas desde claude.ai; la búsqueda, todavía no desde
-> Agentforce (P15 en [pendientes](../docs/pendientes.md)).
+> Actualizado: 2026-11-08. **Estado:** las clases de ventas compilan y sus pruebas pasan en la Developer
+> Edition. Las tres que escriben están probadas desde claude.ai, y la búsqueda y el historial, desde
+> Agentforce (P15 en [pendientes](../docs/pendientes.md)). `AgentesLeerContextoCaso`, de servicio, está
+> probada en la org desde el 2026-11-10. `AgentesCrearBorradorArticulo` (2026-11-14) aún no está compilada
+> en la org (P16).
 
 Proyecto de Salesforce con las acciones que los plugins de Claude pueden ejecutar en el CRM. Cada
 acción es una clase Apex `@InvocableMethod` que se publica como herramienta de un **servidor MCP
@@ -19,6 +21,8 @@ para ejecutar estas acciones, cada una con sus validaciones.
 | `AgentesMoverFechaCierre` | Mover fecha de cierre de una oportunidad | Cambia `CloseDate` a hoy o una fecha posterior | `ventas-seguimiento` |
 | `AgentesLeerHistorialOportunidad` | Leer historial de una oportunidad | Solo lee: etapa, monto, fecha de cierre y próximo paso de una oportunidad, sus últimas N tareas y eventos y su contacto principal | Agentforce |
 | `AgentesBuscarOportunidadesSinActividad` | Buscar oportunidades sin actividad reciente | Solo lee: devuelve las oportunidades abiertas del usuario con N días o más sin actividad, de mayor a menor monto | Agentforce ([agentforce/](agentforce/seguimiento-oportunidades.md)) |
+| `AgentesLeerContextoCaso` | Leer contexto de un caso | Solo lee: el caso, el nombre de su contacto y de su cuenta, sus últimos N comentarios y los otros N casos de la misma cuenta. Sin correo ni teléfono del contacto. Probada en la org el 2026-11-10 (8 de 8 pruebas y Live Test) | Agentforce de servicio ([agentforce/](agentforce/servicio-conocimiento.md)) |
+| `AgentesCrearBorradorArticulo` | Crear borrador de artículo desde un caso | Crea un artículo de Knowledge **en borrador** (nunca lo publica) ligado a un caso cerrado por `SourceId`, con el título y el resumen que redacta el agente. No crea otro si el caso ya tiene artículo. Necesita Lightning Knowledge | Agentforce de servicio, fase 4 ([agentforce/](agentforce/servicio-conocimiento.md#fase-4-subagente-borradores-de-artículo)) |
 
 La búsqueda y la lectura del historial son para el agente de Agentforce, que no tiene las herramientas de `sobject-reads`. En
 claude.ai no hace falta añadirla al servidor `AgentesCRM`: el plugin ya busca con `sobject-reads`. Los
@@ -39,6 +43,8 @@ Cada clase tiene su clase de prueba, como pide Salesforce
 | `AgentesMoverFechaCierre` | `AgentesMoverFechaCierreTest` |
 | `AgentesBuscarOportunidadesSinActividad` | `AgentesBuscarOppSinActividadTest` |
 | `AgentesLeerHistorialOportunidad` | `AgentesLeerHistorialOportunidadTest` |
+| `AgentesLeerContextoCaso` | `AgentesLeerContextoCasoTest` |
+| `AgentesCrearBorradorArticulo` | `AgentesCrearBorradorArticuloTest` |
 
 Los datos los crea una sola fábrica, `AgentesTestDataFactory` (`@IsTest`). Cada clase de prueba:
 
@@ -63,8 +69,11 @@ los nombres de los perfiles estándar al idioma del usuario. En una org nueva, l
 - **Solo oportunidades abiertas.** Una cerrada no se modifica ni sale en la búsqueda.
 - **Ninguna fecha pasada.** Las fechas se comparan con el día del usuario.
 - **Nada se borra.** Ninguna acción elimina registros.
+- **Nada se publica.** El borrador de artículo queda en Draft; publicarlo es trabajo de una persona.
 - **La lectura del historial solo lee** y resuelve todas las solicitudes con una sola consulta (la
   oportunidad con subconsultas de tareas, eventos y contacto principal).
+- **La lectura del contexto de un caso solo lee** y resuelve todas las solicitudes con dos consultas como
+  mucho: los casos con sus comentarios, y las cuentas con sus casos. Lee también casos cerrados.
 - **La búsqueda solo lee** y solo devuelve oportunidades del usuario conectado. Usa una consulta por
   solicitud, porque cada solicitud trae sus propios filtros y su límite; si un flujo manda más
   solicitudes de las consultas que quedan, las sobrantes vuelven con error.
@@ -77,12 +86,17 @@ Con [Salesforce CLI](https://developer.salesforce.com/tools/salesforcecli), desd
 
 ```bash
 sf org login web --alias agentes-crm
-sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOppSinActividadTest --tests AgentesLeerHistorialOportunidadTest
+sf project deploy start --target-org agentes-crm --test-level RunSpecifiedTests --tests AgentesCrmAccionesTest --tests AgentesActualizarProximoPasoTest --tests AgentesCrearTareaSeguimientoTest --tests AgentesMoverFechaCierreTest --tests AgentesBuscarOppSinActividadTest --tests AgentesLeerHistorialOportunidadTest --tests AgentesLeerContextoCasoTest --tests AgentesCrearBorradorArticuloTest
 ```
+
+`AgentesCrearBorradorArticulo` y su prueba usan `Knowledge__kav`, que solo existe con Lightning Knowledge
+activado: en una org sin Knowledge no compilan. Ahí hay que dejarlas fuera del despliegue (por ejemplo con
+`.forceignore`) y quitar su línea del Permission Set. Sus pruebas piden además que el usuario que las corre
+sea Knowledge User.
 
 En producción, Salesforce exige que las pruebas pasen y cubran al menos el 75 % del Apex.
 
-Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las seis clases de prueba
+Sin CLI, en Developer Console: crear primero `AgentesTestDataFactory` y luego las ocho clases de prueba
 (**File > New > Apex Class**), y correrlas con **Test > New Run**. La cobertura de cada clase sale en la
 pestaña **Tests** y en **Overall Code Coverage**.
 
@@ -109,6 +123,11 @@ La guía completa para el cliente está en [instalacion-salesforce.md](../docs/c
 El agente de Agentforce usa las mismas tres acciones más la búsqueda. Las instrucciones del subagente
 «Seguimiento de oportunidades», listas para copiar en Agentforce Builder, están en
 [agentforce/seguimiento-oportunidades.md](agentforce/seguimiento-oportunidades.md).
+
+Los agentes de servicio con conocimiento (respuestas con la base de conocimiento y atención con
+contexto) están preparados en [agentforce/servicio-conocimiento.md](agentforce/servicio-conocimiento.md),
+con sus datos de prueba en [scripts/apex/](scripts/apex/servicio-casos-prueba.apex). Todavía no se
+probaron en la org.
 
 Los nombres de clase Apex tienen como máximo 40 caracteres. Por eso la prueba de
 `AgentesBuscarOportunidadesSinActividad` se llama `AgentesBuscarOppSinActividadTest` y no `<Clase>Test`.
