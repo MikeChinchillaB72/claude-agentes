@@ -42,7 +42,9 @@
   Decisiones de Miguel del 2026-11-12: el Data Library «Conocimiento de servicio v2» se queda (borrarlo
   no hace falta y podría llevarse el índice compartido), y el Service Agent para clientes queda fuera:
   estas pruebas son para entender Agentforce. Falta la fase 3 (clasificación), que espera las categorías
-  de la empresa (P1), y la fase 4 (borradores de artículo), sin empezar.
+  de la empresa (P1). La fase 4 (borradores de artículo) tiene su acción `AgentesCrearBorradorArticulo` escrita
+  el 2026-11-14 ([bitácora](cambios_2026-11-14.md)); falta desplegarla en la org, crear el subagente
+  `Article_Drafts` y probar S12 a S15.
 - **P12 · Acciones de alto riesgo (fase 2).** Fuera por decisión de Miguel del 2026-11-07: enviar correos
   a clientes, convertir leads y responder casos al cliente. Se retoman cuando él lo pida.
 
